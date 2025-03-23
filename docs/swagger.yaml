@@ -1,0 +1,57 @@
+basePath: /api
+definitions:
+  transport.errorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  transport.successResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: This is a sample server celler server.
+  title: Kolesa API
+  version: "1.0"
+paths:
+  /cars:
+    get:
+      consumes:
+      - application/json
+      description: Get all cars
+      parameters:
+      - description: Limit param
+        in: query
+        name: limit
+        type: integer
+      - description: Offset param
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/transport.successResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/transport.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/transport.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/transport.errorResponse'
+      summary: Get all cars
+      tags:
+      - cars
+swagger: "2.0"
