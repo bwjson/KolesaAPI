@@ -8,6 +8,7 @@ import (
 	"github.com/bwjson/api/internal/repository"
 	"github.com/bwjson/api/internal/service"
 	"github.com/bwjson/api/internal/transport"
+	"github.com/bwjson/api/pkg"
 	_ "github.com/lib/pq"
 	"log/slog"
 	"os"
@@ -29,11 +30,18 @@ func main() {
 		log.Error("Cannot connect to Postgres", err.Error())
 	}
 
+	s3, err := pkg.NewS3Client(cfg.S3.KeyID, cfg.S3.AppKey, cfg.S3.AuthToken, cfg.S3.DownloadUrl, log)
+	if err != nil {
+		log.Error("Cannot connect to S3", err.Error())
+	}
+
+	log.Info("S3", cfg)
+
 	repo := repository.NewRepos(db)
 
 	services := service.NewServices(repo)
 
-	h := transport.NewHandler(services)
+	h := transport.NewHandler(services, s3)
 
 	s := internal.NewServer(*cfg, h.InitRoutes())
 

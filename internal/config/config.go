@@ -12,6 +12,7 @@ type Config struct {
 	Env     string `yaml:"env" env-default:"development"`
 	Db      `yaml:"db"`
 	HttpSrv `yaml:"http"`
+	S3      `yaml:"s3"`
 }
 
 type HttpSrv struct {
@@ -27,6 +28,13 @@ type Db struct {
 	Port     string
 	Host     string
 	Sslmode  string
+}
+
+type S3 struct {
+	KeyID       string `yaml:"key_id"`
+	AppKey      string `yaml:"app_key"`
+	AuthToken   string `yaml:"auth_token"`
+	DownloadUrl string `yaml:"download_url"`
 }
 
 func LoadConfig() *Config {

@@ -6,6 +6,8 @@
 /bin/
 /pkg/
 /vendor/
+.idea/
+.idea
 
 go.sum
 go.work

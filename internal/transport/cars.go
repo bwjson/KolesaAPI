@@ -47,9 +47,20 @@ func (h *Handler) GetAll(c *gin.Context) {
 	NewSuccessResponse(c, http.StatusOK, "Successfully returned all the cars", data)
 }
 
-func (h *Handler) GetById(c *gin.Context) {
-}
+func (h *Handler) GetById(c *gin.Context) {}
 
 func (h *Handler) UpdateById(c *gin.Context) {}
 
-func (h *Handler) DeleteById(c *gin.Context) {}
+// @Summary      Delete car by id
+// @Description  Deleting a specific car
+// @Tags         cars
+// @Produce      json
+// @Param        id path int true "Deleting car id"
+// @Success      200  {object}  successResponse
+// @Failure      400  {object}  errorResponse
+// @Failure      404  {object}  errorResponse
+// @Failure      500  {object}  errorResponse
+// @Router       /cars [get]
+func (h *Handler) DeleteById(c *gin.Context) {
+
+}
