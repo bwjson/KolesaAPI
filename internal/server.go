@@ -2,7 +2,7 @@ package internal
 
 import (
 	"context"
-	"github.com/bwjson/api/internal/config"
+	"github.com/bwjson/kolesa_api/internal/config"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
