@@ -4,7 +4,6 @@
 *.o
 
 /bin/
-/pkg/
 /vendor/
 .idea/
 .idea
