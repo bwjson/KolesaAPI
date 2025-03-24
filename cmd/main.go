@@ -17,7 +17,7 @@ import (
 // @title           Kolesa API
 // @version         1.0
 // @description     This is a sample server celler server.
-// @host      localhost:8000
+// @host      kolesaapi.onrender.com
 // @BasePath  /api
 func main() {
 	cfg := config.LoadConfig()

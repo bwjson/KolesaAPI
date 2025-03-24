@@ -11,7 +11,7 @@ definitions:
       message:
         type: string
     type: object
-host: localhost:8000
+host: kolesaapi.onrender.com
 info:
   contact: {}
   description: This is a sample server celler server.

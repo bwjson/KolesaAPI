@@ -35,7 +35,7 @@ type S3 struct {
 }
 
 func LoadConfig() *Config {
-	// Загружаем .env файл
+	// PRODUCTION DELETE
 	//if err := godotenv.Load(); err != nil {
 	//	log.Fatal("Error loading .env file")
 	//}

@@ -3,6 +3,7 @@ package transport
 import (
 	"github.com/bwjson/kolesa_api/internal/service"
 	"github.com/bwjson/kolesa_api/pkg"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
@@ -21,6 +22,15 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	r := gin.Default()
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	r.Use(cors.Default())
+
+	//r.Use(cors.New(cors.Config{
+	//	AllowOrigins:     []string{"https://kolesaapi.onrender.com"},
+	//	AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+	//	AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+	//	AllowCredentials: true,
+	//}))
 
 	cars := r.Group("/api/cars")
 	{
