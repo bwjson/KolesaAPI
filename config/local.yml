@@ -1,0 +1,18 @@
+env:
+  "local" # local / dev / prod
+db:
+  user: "postgres"
+  password: "5432"
+  name: "kolesa"
+  port: "5432"
+  host: "localhost"
+  sslmode: "disable"
+http:
+  address: "localhost:8000"
+  timeout: 4s
+  idle_timeout: 30s
+s3:
+  key_id: "a14d966d90f0"
+  app_key: "006ac8fb3b9b0dac71345ad54e3ac10a31afd589c7"
+  auth_token: "4_006a14d966d90f00000000000_01bb395e_506cb4_acct_GNDnMjpqo7p4CvJ4hGG1TIJCFzw="
+  download_url: "https://f006.backblazeb2.com"

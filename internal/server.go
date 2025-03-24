@@ -14,9 +14,9 @@ type Server struct {
 func NewServer(cfg config.Config, handler *gin.Engine) *Server {
 	return &Server{
 		httpServer: &http.Server{
-			Addr:        cfg.Address,
-			IdleTimeout: cfg.IdleTimeout,
-			ReadTimeout: cfg.Timeout,
+			Addr:        cfg.HttpSrv.Address,
+			IdleTimeout: cfg.HttpSrv.IdleTimeout,
+			ReadTimeout: cfg.HttpSrv.Timeout,
 			Handler:     handler,
 		},
 	}

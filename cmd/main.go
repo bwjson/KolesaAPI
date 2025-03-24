@@ -23,7 +23,7 @@ func main() {
 	cfg := config.LoadConfig()
 
 	log := setupLogger(cfg.Env)
-	log.Info("Start the application", slog.String("address", cfg.Address))
+	log.Info("Start the application", slog.String("address", cfg.HttpSrv.Address))
 
 	db, err := postgres.NewPostgresDB(cfg.Db.User, cfg.Db.Name, cfg.Db.Port, cfg.Db.Password, cfg.Db.Host, cfg.Db.Sslmode)
 	if err != nil {
