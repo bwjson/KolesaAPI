@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"github.com/bwjson/api/internal/dto"
-	"github.com/bwjson/api/internal/repository"
+	"github.com/bwjson/kolesa_api/internal/dto"
+	"github.com/bwjson/kolesa_api/internal/repository"
 )
 
 type Cars interface {

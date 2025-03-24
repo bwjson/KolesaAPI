@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
-	"github.com/bwjson/api/internal/dto"
+	"github.com/bwjson/kolesa_api/internal/dto"
 	_ "github.com/lib/pq"
 	"gorm.io/gorm"
 )

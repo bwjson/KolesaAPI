@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"fmt"
-	"github.com/bwjson/api/internal/dto"
+	"github.com/bwjson/kolesa_api/internal/dto"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"

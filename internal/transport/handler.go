@@ -1,8 +1,8 @@
 package transport
 
 import (
-	"github.com/bwjson/api/internal/service"
-	"github.com/bwjson/api/pkg"
+	"github.com/bwjson/kolesa_api/internal/service"
+	"github.com/bwjson/kolesa_api/pkg"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"

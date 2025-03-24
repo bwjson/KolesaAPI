@@ -1,14 +1,14 @@
 package main
 
 import (
-	_ "github.com/bwjson/api/docs"
-	"github.com/bwjson/api/internal"
-	"github.com/bwjson/api/internal/config"
-	"github.com/bwjson/api/internal/postgres"
-	"github.com/bwjson/api/internal/repository"
-	"github.com/bwjson/api/internal/service"
-	"github.com/bwjson/api/internal/transport"
-	"github.com/bwjson/api/pkg"
+	_ "github.com/bwjson/kolesa_api/docs"
+	"github.com/bwjson/kolesa_api/internal"
+	"github.com/bwjson/kolesa_api/internal/config"
+	"github.com/bwjson/kolesa_api/internal/postgres"
+	"github.com/bwjson/kolesa_api/internal/repository"
+	"github.com/bwjson/kolesa_api/internal/service"
+	"github.com/bwjson/kolesa_api/internal/transport"
+	"github.com/bwjson/kolesa_api/pkg"
 	_ "github.com/lib/pq"
 	"log/slog"
 	"os"

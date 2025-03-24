@@ -1,4 +1,4 @@
-module github.com/bwjson/api
+module github.com/bwjson/kolesa_api
 
 go 1.23.2
 

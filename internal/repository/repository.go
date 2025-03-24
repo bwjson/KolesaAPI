@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"github.com/bwjson/api/internal/dto"
+	"github.com/bwjson/kolesa_api/internal/dto"
 	"gorm.io/gorm"
 )
 
