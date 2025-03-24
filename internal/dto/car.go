@@ -16,28 +16,41 @@ const (
 )
 
 type Car struct {
-	ID               uint          `gorm:"primaryKey" json:"id"`
-	UserID           uint          `gorm:"not null" json:"user_id"`
-	CategoryID       uint          `gorm:"not null" json:"category_id"`
-	BrandID          uint          `gorm:"not null" json:"brand_id"`
-	ColorID          uint          `gorm:"not null" json:"color_id"`
-	GenerationID     uint          `gorm:"not null" json:"generation_id"`
-	BodyID           uint          `gorm:"not null" json:"body_id"`
-	CityID           uint          `gorm:"not null" json:"city_id"`
-	User             User          `gorm:"foreignKey:UserID" json:"user"`
-	Category         Category      `gorm:"foreignKey:CategoryID" json:"category"`
-	Brand            Brand         `gorm:"foreignKey:BrandID" json:"brand"`
-	Color            Color         `gorm:"foreignKey:ColorID" json:"color"`
-	Generation       Generation    `gorm:"foreignKey:GenerationID" json:"generation"`
-	Body             Body          `gorm:"foreignKey:BodyID" json:"body"`
-	City             City          `gorm:"foreignKey:CityID" json:"city"`
-	EngineVolume     string        `json:"engine_volume"`
-	Mileage          string        `json:"mileage"`
-	WheelDrive       WheelDrive    `json:"wheel_drive"`
-	SteeringWheel    SteeringWheel `json:"steering_wheel"`
-	CustomsClearance bool          `json:"customs_clearance"`
-	Description      string        `json:"description"`
-	Price            string        `json:"price"`
-	CreatedAt        time.Time     `gorm:"autoCreateTime" json:"created_at"`
-	UpdatedAt        time.Time     `gorm:"autoUpdateTime" json:"updated_at"`
+	ID               uint          `gorm:"primaryKey" json:"id,omitempty"`
+	UserID           uint          `gorm:"not null" json:"user_id,omitempty"`
+	CategoryID       uint          `gorm:"not null" json:"category_id,omitempty"`
+	BrandID          uint          `gorm:"not null" json:"brand_id,omitempty"`
+	ColorID          uint          `gorm:"not null" json:"color_id,omitempty"`
+	GenerationID     uint          `gorm:"not null" json:"generation_id,omitempty"`
+	BodyID           uint          `gorm:"not null" json:"body_id,omitempty"`
+	CityID           uint          `gorm:"not null" json:"city_id,omitempty"`
+	ModelID          uint          `gorm:"not null" json:"model_id,omitempty"`
+	User             *User         `gorm:"foreignKey:UserID" json:"user,omitempty"`
+	Category         *Category     `gorm:"foreignKey:CategoryID" json:"category,omitempty"`
+	Brand            *Brand        `gorm:"foreignKey:BrandID" json:"brand,omitempty"`
+	Color            *Color        `gorm:"foreignKey:ColorID" json:"color,omitempty"`
+	Generation       *Generation   `gorm:"foreignKey:GenerationID" json:"generation,omitempty"`
+	Body             *Body         `gorm:"foreignKey:BodyID" json:"body,omitempty"`
+	City             *City         `gorm:"foreignKey:CityID" json:"city,omitempty"`
+	Model            *Model        `gorm:"foreignKey:ModelID" json:"model,omitempty"`
+	EngineVolume     string        `json:"engine_volume,omitempty"`
+	Mileage          string        `json:"mileage,omitempty"`
+	WheelDrive       WheelDrive    `json:"wheel_drive,omitempty"`
+	SteeringWheel    SteeringWheel `json:"steering_wheel,omitempty"`
+	CustomsClearance bool          `json:"customs_clearance,omitempty"`
+	Description      string        `json:"description,omitempty"`
+	Price            string        `json:"price,omitempty"`
+	CreatedAt        time.Time     `gorm:"autoCreateTime" json:"created_at,omitempty"`
+	UpdatedAt        time.Time     `gorm:"autoUpdateTime" json:"updated_at,omitempty"`
+}
+
+type CarDefault struct {
+	ID         uint     `gorm:"primaryKey" json:"id"`
+	CategoryID uint     `gorm:"not null" json:"category_id"`
+	BrandID    uint     `gorm:"not null" json:"brand_id"`
+	ModelID    uint     `gorm:"not null" json:"model_id"`
+	Category   Category `gorm:"foreignKey:CategoryID" json:"category"`
+	Brand      Brand    `gorm:"foreignKey:BrandID" json:"brand"`
+	Model      Model    `gorm:"foreignKey:ModelID" json:"model"`
+	Price      string   `json:"price"`
 }

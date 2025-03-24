@@ -20,12 +20,17 @@ info:
 paths:
   /cars:
     get:
-      description: Deleting a specific car
+      consumes:
+      - application/json
+      description: Get basic info
       parameters:
-      - description: Deleting car id
-        in: path
-        name: id
-        required: true
+      - description: Limit param
+        in: query
+        name: limit
+        type: integer
+      - description: Offset param
+        in: query
+        name: offset
         type: integer
       produces:
       - application/json
@@ -46,7 +51,43 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/transport.errorResponse'
-      summary: Delete car by id
+      summary: Main page cars
+      tags:
+      - cars
+  /cars/extended:
+    get:
+      consumes:
+      - application/json
+      description: Get all cars
+      parameters:
+      - description: Limit param
+        in: query
+        name: limit
+        type: integer
+      - description: Offset param
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/transport.successResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/transport.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/transport.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/transport.errorResponse'
+      summary: Get all cars
       tags:
       - cars
   /cars/photo/{fileId}:

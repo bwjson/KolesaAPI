@@ -29,7 +29,7 @@ func (r *CarsRepo) Create(ctx context.Context, good dto.Car) (int, error) {
 	return 0, nil
 }
 
-func (r *CarsRepo) GetAll(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
+func (r *CarsRepo) GetAllExtended(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
 	var cars []dto.Car
 
 	res := r.db.WithContext(ctx).
@@ -40,6 +40,25 @@ func (r *CarsRepo) GetAll(ctx context.Context, limit, offset int) ([]dto.Car, in
 		Preload("Generation").
 		Preload("Body").
 		Preload("City").
+		Limit(limit).
+		Offset(offset).
+		Find(&cars)
+
+	if res.Error != nil {
+		return nil, 0, errors.New("No cars found")
+	}
+
+	return cars, int(res.RowsAffected), nil
+}
+
+func (r *CarsRepo) GetAll(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
+	var cars []dto.Car
+
+	res := r.db.WithContext(ctx).
+		Select("cars.id", "cars.price", "cars.category_id", "cars.brand_id", "cars.model_id").
+		Preload("Category").
+		Preload("Brand").
+		Preload("Model").
 		Limit(limit).
 		Offset(offset).
 		Find(&cars)

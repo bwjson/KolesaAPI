@@ -27,9 +27,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		// r.Use(AuthMiddleware)
 		cars.POST("/", h.Create)
 		cars.GET("/", h.GetAll)
+		cars.GET("/extended", h.GetAllExtended)
 		cars.GET("/:id", h.GetById)
 		cars.PATCH("/:id", h.UpdateById)
-		cars.DELETE("/:id", h.DeleteById)
+		//cars.DELETE("/:id", h.DeleteById)
 		cars.GET("/photo/:file_id", h.GetAvatar)
 	}
 

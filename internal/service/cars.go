@@ -18,6 +18,10 @@ func (s *CarsService) Create(ctx context.Context, good dto.Car) (int, error) {
 	return s.repo.Create(ctx, good)
 }
 
+func (s *CarsService) GetAllExtended(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
+	return s.repo.GetAllExtended(ctx, limit, offset)
+}
+
 func (s *CarsService) GetAll(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
 	return s.repo.GetAll(ctx, limit, offset)
 }
