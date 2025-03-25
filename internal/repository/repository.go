@@ -23,6 +23,7 @@ type Details interface {
 	GetAllBodies(ctx context.Context) ([]dto.Body, error)
 	GetAllGenerations(ctx context.Context) ([]dto.Generation, error)
 	GetAllColors(ctx context.Context) ([]dto.Color, error)
+	GetSourceById(ctx context.Context, carId int) (string, error)
 }
 
 type Repos struct {

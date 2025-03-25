@@ -35,12 +35,13 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		cars.GET("/extended", h.GetAllCarsExtended)
 		cars.GET("/:id", h.GetCarById)
 		cars.PATCH("/:id", h.UpdateById)
-		cars.GET("/photo/:file_id", h.GetAvatar)
+		cars.GET("/avatar/:car_id", h.GetAvatarSource)
 	}
 
 	s3 := r.Group("/api/s3")
 	{
 		s3.GET("/auth_token", h.GetAuthToken)
+		//s3.GET("/sources", h.GetCarSources)
 	}
 
 	details := r.Group("/api/details")
@@ -51,7 +52,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		details.GET("/categories", h.GetAllCategories)
 		details.GET("/bodies", h.GetAllBodies)
 		details.GET("/generations", h.GetAllGenerations)
-
+		details.GET("/colors", h.GetAllColors)
 	}
 
 	return r

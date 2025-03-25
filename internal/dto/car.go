@@ -33,6 +33,7 @@ type Car struct {
 	Body             *Body         `gorm:"foreignKey:BodyID" json:"body,omitempty"`
 	City             *City         `gorm:"foreignKey:CityID" json:"city,omitempty"`
 	Model            *Model        `gorm:"foreignKey:ModelID" json:"model,omitempty"`
+	AvatarSource     string        `json:"avatar_source,omitempty"`
 	EngineVolume     string        `json:"engine_volume,omitempty"`
 	Mileage          string        `json:"mileage,omitempty"`
 	WheelDrive       WheelDrive    `json:"wheel_drive,omitempty"`

@@ -98,3 +98,15 @@ func (r *DetailsRepo) GetAllColors(ctx context.Context) ([]dto.Color, error) {
 
 	return colors, nil
 }
+
+func (r *DetailsRepo) GetSourceById(ctx context.Context, carId int) (string, error) {
+	var carPhoto dto.CarPhoto
+
+	res := r.db.WithContext(ctx).Find(&carPhoto, "car_id = ?", carId)
+
+	if res.Error != nil {
+		return "", errors.New("No sources found")
+	}
+
+	return carPhoto.PhotoUrl, nil
+}

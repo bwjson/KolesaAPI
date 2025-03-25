@@ -6,9 +6,6 @@ import (
 	"strconv"
 )
 
-func (h *Handler) Create(c *gin.Context) {
-}
-
 // @Summary      Get all cars
 // @Description  Get all cars
 // @Tags         cars
@@ -114,6 +111,6 @@ func (h *Handler) GetCarById(c *gin.Context) {
 
 func (h *Handler) UpdateById(c *gin.Context) {}
 
-func (h *Handler) DeleteById(c *gin.Context) {
+func (h *Handler) DeleteById(c *gin.Context) {}
 
-}
+func (h *Handler) Create(c *gin.Context) {}
