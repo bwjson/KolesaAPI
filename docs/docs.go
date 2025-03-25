@@ -70,6 +70,44 @@ const docTemplate = `{
                 }
             }
         },
+        "/cars/avatar/{car_id}": {
+            "get": {
+                "description": "Get car avatar by fileId from S3",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cars"
+                ],
+                "summary": "Get car avatar",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Car ID",
+                        "name": "car_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/transport.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/cars/extended": {
             "get": {
                 "description": "Get all cars",
@@ -114,42 +152,6 @@ const docTemplate = `{
                         "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/transport.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/transport.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/cars/photo/{file_id}": {
-            "get": {
-                "description": "Get car avatar by fileId from S3",
-                "produces": [
-                    "image/png",
-                    " image/jpeg"
-                ],
-                "tags": [
-                    "cars"
-                ],
-                "summary": "Get car avatar",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID файла",
-                        "name": "fileId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "file"
                         }
                     },
                     "500": {

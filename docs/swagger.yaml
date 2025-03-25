@@ -87,6 +87,31 @@ paths:
       summary: Get info about car
       tags:
       - cars
+  /cars/avatar/{car_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get car avatar by fileId from S3
+      parameters:
+      - description: Car ID
+        in: path
+        name: car_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/transport.errorResponse'
+      summary: Get car avatar
+      tags:
+      - cars
   /cars/extended:
     get:
       consumes:
@@ -121,30 +146,6 @@ paths:
           schema:
             $ref: '#/definitions/transport.errorResponse'
       summary: Get all cars
-      tags:
-      - cars
-  /cars/photo/{file_id}:
-    get:
-      description: Get car avatar by fileId from S3
-      parameters:
-      - description: ID файла
-        in: path
-        name: fileId
-        required: true
-        type: string
-      produces:
-      - image/png
-      - ' image/jpeg'
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: file
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/transport.errorResponse'
-      summary: Get car avatar
       tags:
       - cars
   /details/bodies:
