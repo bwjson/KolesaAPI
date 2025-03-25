@@ -19,15 +19,15 @@ func (s *CarsService) Create(ctx context.Context, good dto.Car) (int, error) {
 }
 
 func (s *CarsService) GetAllExtended(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
-	return s.repo.GetAllExtended(ctx, limit, offset)
+	return s.repo.GetAllCarsExtended(ctx, limit, offset)
 }
 
 func (s *CarsService) GetAll(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
-	return s.repo.GetAll(ctx, limit, offset)
+	return s.repo.GetAllCars(ctx, limit, offset)
 }
 
 func (s *CarsService) GetById(ctx context.Context, id int) (dto.Car, error) {
-	return s.repo.GetById(ctx, id)
+	return s.repo.GetCarById(ctx, id)
 }
 
 func (s *CarsService) UpdateById(ctx context.Context, id int, car dto.Car) error {

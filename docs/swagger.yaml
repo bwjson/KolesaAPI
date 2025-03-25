@@ -54,6 +54,39 @@ paths:
       summary: Main page cars
       tags:
       - cars
+  /cars/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get info about one car by id
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/transport.successResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/transport.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/transport.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/transport.errorResponse'
+      summary: Get info about car
+      tags:
+      - cars
   /cars/extended:
     get:
       consumes:
@@ -90,7 +123,7 @@ paths:
       summary: Get all cars
       tags:
       - cars
-  /cars/photo/{fileId}:
+  /cars/photo/{file_id}:
     get:
       description: Get car avatar by fileId from S3
       parameters:
@@ -114,4 +147,20 @@ paths:
       summary: Get car avatar
       tags:
       - cars
+  /s3/auth_token:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/transport.successResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/transport.errorResponse'
+      summary: Get S3 auth token
+      tags:
+      - s3
 swagger: "2.0"

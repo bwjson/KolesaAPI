@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/bwjson/kolesa_api/internal/dto"
 	_ "github.com/lib/pq"
 	"gorm.io/gorm"
@@ -29,7 +30,7 @@ func (r *CarsRepo) Create(ctx context.Context, good dto.Car) (int, error) {
 	return 0, nil
 }
 
-func (r *CarsRepo) GetAllExtended(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
+func (r *CarsRepo) GetAllCarsExtended(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
 	var cars []dto.Car
 
 	res := r.db.WithContext(ctx).
@@ -51,7 +52,7 @@ func (r *CarsRepo) GetAllExtended(ctx context.Context, limit, offset int) ([]dto
 	return cars, int(res.RowsAffected), nil
 }
 
-func (r *CarsRepo) GetAll(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
+func (r *CarsRepo) GetAllCars(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
 	var cars []dto.Car
 
 	res := r.db.WithContext(ctx).
@@ -70,17 +71,25 @@ func (r *CarsRepo) GetAll(ctx context.Context, limit, offset int) ([]dto.Car, in
 	return cars, int(res.RowsAffected), nil
 }
 
-func (r *CarsRepo) GetById(ctx context.Context, id int) (dto.Car, error) {
-	//var good dto.Good
-	//
-	//err := r.db.QueryRow("SELECT id, name, description, photo_url, price FROM goods WHERE id = $1", id).
-	//	Scan(&good.Id, &good.Name, &good.Description, &good.PhotoUrl, &good.Price)
-	//
-	//if err != nil {
-	//	return good, err
-	//}
-	//
-	return dto.Car{}, nil
+func (r *CarsRepo) GetCarById(ctx context.Context, id int) (dto.Car, error) {
+	var car dto.Car
+
+	result := r.db.WithContext(ctx).
+		Preload("User").
+		Preload("Category").
+		Preload("Brand").
+		Preload("Color").
+		Preload("Generation").
+		Preload("Body").
+		Preload("City").First(&car, "id = ?", id)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return dto.Car{}, fmt.Errorf("Car with ID = %d not found", id)
+		}
+		return dto.Car{}, fmt.Errorf("Database error: %w", result.Error)
+	}
+
+	return car, nil
 }
 
 func (r *CarsRepo) UpdateById(ctx context.Context, id int, good dto.Car) error {

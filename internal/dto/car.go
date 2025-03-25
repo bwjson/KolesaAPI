@@ -6,13 +6,13 @@ type WheelDrive string
 type SteeringWheel string
 
 const (
-	Manual    WheelDrive = "Механике"
-	Automatic WheelDrive = "Автомат"
+	Manual    WheelDrive = "Manual"
+	Automatic WheelDrive = "Automatic"
 )
 
 const (
-	Left  SteeringWheel = "Левое"
-	Right SteeringWheel = "Правое"
+	Left  SteeringWheel = "Left"
+	Right SteeringWheel = "Right"
 )
 
 type Car struct {
@@ -44,13 +44,13 @@ type Car struct {
 	UpdatedAt        time.Time     `gorm:"autoUpdateTime" json:"updated_at,omitempty"`
 }
 
-type CarDefault struct {
-	ID         uint     `gorm:"primaryKey" json:"id"`
-	CategoryID uint     `gorm:"not null" json:"category_id"`
-	BrandID    uint     `gorm:"not null" json:"brand_id"`
-	ModelID    uint     `gorm:"not null" json:"model_id"`
-	Category   Category `gorm:"foreignKey:CategoryID" json:"category"`
-	Brand      Brand    `gorm:"foreignKey:BrandID" json:"brand"`
-	Model      Model    `gorm:"foreignKey:ModelID" json:"model"`
-	Price      string   `json:"price"`
-}
+//type CarDefault struct {
+//	ID         uint     `gorm:"primaryKey" json:"id"`
+//	CategoryID uint     `gorm:"not null" json:"category_id"`
+//	BrandID    uint     `gorm:"not null" json:"brand_id"`
+//	ModelID    uint     `gorm:"not null" json:"model_id"`
+//	Category   Category `gorm:"foreignKey:CategoryID" json:"category"`
+//	Brand      Brand    `gorm:"foreignKey:BrandID" json:"brand"`
+//	Model      Model    `gorm:"foreignKey:ModelID" json:"model"`
+//	Price      string   `json:"price"`
+//}

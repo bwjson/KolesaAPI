@@ -24,7 +24,9 @@ func NewPostgresDB(user string, name string, port string, password string, host 
 		&dto.Body{},
 		&dto.City{},
 		&dto.Car{},
-		&dto.CarPhoto{})
+		&dto.CarPhoto{},
+		&dto.Model{},
+	)
 	if err != nil {
 		log.Fatal("Migration failed", err)
 		return nil, err

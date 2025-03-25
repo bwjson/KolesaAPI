@@ -16,6 +16,7 @@ WORKDIR /root
 
 COPY --from=builder /app/main .
 
+# LOCAL DEV
 #COPY .env .
 
 CMD sh -c "sleep 5 && ./main"

@@ -21,7 +21,7 @@ func (h *Handler) Create(c *gin.Context) {
 // @Failure      404  {object}  errorResponse
 // @Failure      500  {object}  errorResponse
 // @Router       /cars/extended [get]
-func (h *Handler) GetAllExtended(c *gin.Context) {
+func (h *Handler) GetAllCarsExtended(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
@@ -59,7 +59,7 @@ func (h *Handler) GetAllExtended(c *gin.Context) {
 // @Failure      404  {object}  errorResponse
 // @Failure      500  {object}  errorResponse
 // @Router       /cars [get]
-func (h *Handler) GetAll(c *gin.Context) {
+func (h *Handler) GetAllCars(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
@@ -85,7 +85,32 @@ func (h *Handler) GetAll(c *gin.Context) {
 	NewSuccessResponse(c, http.StatusOK, "Successfully returned all the cars", data)
 }
 
-func (h *Handler) GetById(c *gin.Context) {}
+// @Summary      Get info about car
+// @Description  Get info about one car by id
+// @Tags         cars
+// @Accept       json
+// @Produce      json
+// @Param        id path int true "ID"
+// @Success      200  {object}  successResponse
+// @Failure      400  {object}  errorResponse
+// @Failure      404  {object}  errorResponse
+// @Failure     500  {object}  errorResponse
+// @Router       /cars/{id} [get]
+func (h *Handler) GetCarById(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid car id param")
+	}
+
+	car, err := h.services.Cars.GetById(ctx, id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+	}
+
+	NewSuccessResponse(c, http.StatusOK, "Successfully returned a car", car)
+}
 
 func (h *Handler) UpdateById(c *gin.Context) {}
 
