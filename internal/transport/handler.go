@@ -21,10 +21,11 @@ func NewHandler(services *service.Services, repo *repository.Repos, s3 *pkg.S3Cl
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
-	r := gin.Default()
+	r := gin.New()
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:3001"},
+		AllowOrigins: []string{"http://localhost:3000", "https://kolesaapi.onrender.com", "http://localhost:3000/ru",
+			"http://127.0.0.1:3000", "http://127.0.0.1:3000/ru"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
