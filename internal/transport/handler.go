@@ -28,7 +28,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	//r.Use(cors.Default())
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://kolesaapi.onrender.com", "localhost:3000"},
+		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
