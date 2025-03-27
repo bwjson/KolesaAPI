@@ -1,0 +1,80 @@
+type Category {
+    id: ID!
+    name: String!
+}
+
+type Brand {
+    id: ID!
+    name: String!
+}
+
+type Color {
+    id: ID!
+    name: String!
+}
+
+type Model {
+    id: ID!
+    name: String!
+    brand: Brand!
+}
+
+type Generation {
+    id: ID!
+    name: String!
+    model: Model!
+}
+
+type Body {
+    id: ID!
+    name: String!
+}
+
+type City {
+    id: ID!
+    name: String!
+}
+
+type CarPhoto {
+    id: ID!
+    photoUrl: String!
+}
+
+type User {
+    id: ID!
+    phoneNumber: String!
+    username: String
+    email: String!
+}
+
+type Car {
+    id: ID!
+    user: User!
+    category: Category!
+    brand: Brand!
+    color: Color!
+    generation: Generation!
+    body: Body!
+    city: City!
+    model: Model!
+    avatarSource: String
+    engineVolume: String
+    mileage: String
+    wheelDrive: String
+    steeringWheel: String
+    customsClearance: Boolean
+    description: String
+    price: String
+    createdAt: String
+    updatedAt: String
+    photos: [CarPhoto!]!
+}
+
+type CarList {
+    cars: [Car!]!
+    totalCount: Int!
+}
+
+type Query {
+    getAllCarsExtended(limit: Int = 10, offset: Int = 0): CarList!
+}

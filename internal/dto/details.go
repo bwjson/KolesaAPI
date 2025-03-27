@@ -24,7 +24,7 @@ type Model struct {
 type Generation struct {
 	ID      uint   `gorm:"primaryKey" json:"id"`
 	ModelID uint   `gorm:"not null; index; constraint:OnDelete:CASCADE;" json:"model_id"`
-	Name    string `gorm:"unique;not null" json:"name"`
+	Name    string `gorm:"not null" json:"name"`
 }
 
 type Body struct {

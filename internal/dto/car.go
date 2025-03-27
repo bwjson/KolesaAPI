@@ -44,14 +44,3 @@ type Car struct {
 	CreatedAt        time.Time     `gorm:"autoCreateTime" json:"created_at,omitempty"`
 	UpdatedAt        time.Time     `gorm:"autoUpdateTime" json:"updated_at,omitempty"`
 }
-
-//type CarDefault struct {
-//	ID         uint     `gorm:"primaryKey" json:"id"`
-//	CategoryID uint     `gorm:"not null" json:"category_id"`
-//	BrandID    uint     `gorm:"not null" json:"brand_id"`
-//	ModelID    uint     `gorm:"not null" json:"model_id"`
-//	Category   Category `gorm:"foreignKey:CategoryID" json:"category"`
-//	Brand      Brand    `gorm:"foreignKey:BrandID" json:"brand"`
-//	Model      Model    `gorm:"foreignKey:ModelID" json:"model"`
-//	Price      string   `json:"price"`
-//}
