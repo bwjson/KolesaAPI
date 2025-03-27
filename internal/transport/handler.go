@@ -30,8 +30,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	cars := r.Group("/api/cars")
 	{
 		// r.Use(AuthMiddleware)
-		cars.POST("/", h.Create)
-		cars.GET("/", h.GetAllCars)
+		cars.POST("", h.Create)
+		cars.GET("", h.GetAllCars)
 		cars.GET("/extended", h.GetAllCarsExtended)
 		cars.GET("/:id", h.GetCarById)
 		cars.PATCH("/:id", h.UpdateById)
