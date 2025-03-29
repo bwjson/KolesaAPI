@@ -3,13 +3,14 @@ package repository
 import (
 	"context"
 	"github.com/bwjson/kolesa_api/internal/dto"
+	"github.com/bwjson/kolesa_api/internal/graphql/graph/model"
 	"gorm.io/gorm"
 )
 
 type Cars interface {
 	Create(ctx context.Context, good dto.Car) (int, error)
-	GetAllCars(ctx context.Context, limit, offset int) ([]dto.Car, int, error)         // second param is total_count
-	GetAllCarsExtended(ctx context.Context, limit, offset int) ([]dto.Car, int, error) // second param is total_count
+	GetAllCars(ctx context.Context, limit, offset int) ([]dto.Car, int, error)            // second param is total_count
+	GetAllCarsExtended(ctx context.Context, limit, offset int) ([]*model.Car, int, error) // second param is total_count
 	GetCarById(ctx context.Context, id int) (dto.Car, error)
 	UpdateById(ctx context.Context, id int, car dto.Car) error
 	DeleteById(ctx context.Context, id int) error

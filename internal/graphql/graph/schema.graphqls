@@ -1,0 +1,73 @@
+# schema.graphql
+
+type Car {
+  id: ID!
+  user: User!
+  category: Category!
+  brand: Brand!
+  color: Color!
+  generation: Generation!
+  body: Body!
+  city: City!
+  model: Model!
+  avatarSource: String
+  engineVolume: String
+  mileage: String
+  wheelDrive: String
+  steeringWheel: String
+  customsClearance: Boolean
+  description: String
+  price: String
+  createdAt: String
+  updatedAt: String
+}
+
+type User {
+  id: ID!
+  phoneNumber: String!
+  username: String
+  bankCard: String
+  email: String!
+}
+
+type Category {
+  id: ID!
+  name: String!
+}
+
+type Brand {
+  id: ID!
+  name: String!
+}
+
+type Color {
+  id: ID!
+  name: String!
+}
+
+type Model {
+  id: ID!
+  brandId: ID!
+  name: String!
+}
+
+type Generation {
+  id: ID!
+  modelId: ID!
+  name: String!
+}
+
+type Body {
+  id: ID!
+  name: String!
+}
+
+type City {
+  id: ID!
+  name: String!
+}
+
+# Запросы
+type Query {
+  cars: [Car!]!
+}

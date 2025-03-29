@@ -1,6 +1,12 @@
 package transport
 
 import (
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/handler/extension"
+	"github.com/99designs/gqlgen/graphql/handler/lru"
+	"github.com/99designs/gqlgen/graphql/handler/transport"
+	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/bwjson/kolesa_api/internal/graphql/graph"
 	"github.com/bwjson/kolesa_api/internal/repository"
 	"github.com/bwjson/kolesa_api/internal/service"
 	"github.com/bwjson/kolesa_api/pkg"
@@ -8,6 +14,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
+	"github.com/vektah/gqlparser/v2/ast"
+	"log"
+	"os"
 )
 
 type Handler struct {
@@ -30,8 +39,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	cars := r.Group("/api/cars")
 	{
 		// r.Use(AuthMiddleware)
-		cars.POST("", h.Create)
-		cars.GET("", h.GetAllCars)
+		cars.POST("/", h.Create)
+		cars.GET("/", h.GetAllCars)
 		cars.GET("/extended", h.GetAllCarsExtended)
 		cars.GET("/:id", h.GetCarById)
 		cars.PATCH("/:id", h.UpdateById)
@@ -56,4 +65,28 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	}
 
 	return r
+}
+
+const defaultPort = "8080"
+
+func InitGraphQLRoutes(r *gin.Engine) {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = defaultPort
+	}
+
+	gqlsrv := handler.New(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+	gqlsrv.SetQueryCache(lru.New[*ast.QueryDocument](1000)) // Здесь устанавливаем стандартный lru кеш
+
+	gqlsrv.AddTransport(transport.Options{})
+	gqlsrv.AddTransport(transport.GET{})
+	gqlsrv.AddTransport(transport.POST{})
+
+	gqlsrv.Use(extension.Introspection{})
+	gqlsrv.Use(extension.AutomaticPersistedQuery{Cache: lru.New[string](100)})
+
+	r.GET("/", gin.WrapH(playground.Handler("GraphQL playground", "/query")))
+	r.POST("/query", gin.WrapH(gqlsrv))
+
+	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 }

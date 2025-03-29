@@ -43,6 +43,10 @@ func main() {
 
 	h := transport.NewHandler(services, repo, s3)
 
+	//routes := h.InitRoutes()
+	//
+	//transport.InitGraphQLRoutes(routes)
+
 	s := internal.NewServer(*cfg, h.InitRoutes())
 
 	s.Run()

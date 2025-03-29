@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/bwjson/kolesa_api/internal/dto"
+	"github.com/bwjson/kolesa_api/internal/graphql/graph/model"
 	_ "github.com/lib/pq"
 	"gorm.io/gorm"
 )
@@ -30,8 +31,8 @@ func (r *CarsRepo) Create(ctx context.Context, good dto.Car) (int, error) {
 	return 0, nil
 }
 
-func (r *CarsRepo) GetAllCarsExtended(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
-	var cars []dto.Car
+func (r *CarsRepo) GetAllCarsExtended(ctx context.Context, limit, offset int) ([]*model.Car, int, error) {
+	var cars []*model.Car
 
 	res := r.db.WithContext(ctx).
 		Preload("User").
