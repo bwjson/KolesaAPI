@@ -15,7 +15,7 @@
 *.tmp
 *.swp
 .DS_Store
-./internal/graphql
+/internal/graphql
 
 *.sql~
 pgdata/
