@@ -29,7 +29,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	cars := r.Group("/api/cars")
 	{
-		// r.Use(AuthMiddleware)
 		cars.POST("/", h.Create)
 		cars.GET("/", h.GetAllCars)
 		cars.GET("/extended", h.GetAllCarsExtended)
@@ -41,7 +40,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	s3 := r.Group("/api/s3")
 	{
 		s3.GET("/auth_token", h.GetAuthToken)
-		//s3.GET("/sources", h.GetCarSources)
 	}
 
 	details := r.Group("/api/details")

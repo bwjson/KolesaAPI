@@ -41,6 +41,7 @@ func (r *CarsRepo) GetAllCarsExtended(ctx context.Context, limit, offset int) ([
 		Preload("Generation").
 		Preload("Body").
 		Preload("City").
+		Preload("Model").
 		Limit(limit).
 		Offset(offset).
 		Find(&cars)
