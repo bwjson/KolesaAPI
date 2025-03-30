@@ -15,61 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/cars": {
-            "get": {
-                "description": "Get basic info",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "cars"
-                ],
-                "summary": "Main page cars",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit param",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset param",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/transport.successResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/transport.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/transport.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/transport.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/cars/extended": {
             "get": {
                 "description": "Get all cars",
@@ -125,31 +70,50 @@ const docTemplate = `{
                 }
             }
         },
-        "/cars/photo/{file_id}": {
+        "/cars/main": {
             "get": {
-                "description": "Get car avatar by fileId from S3",
+                "description": "Get basic info",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
-                    "image/png",
-                    " image/jpeg"
+                    "application/json"
                 ],
                 "tags": [
                     "cars"
                 ],
-                "summary": "Get car avatar",
+                "summary": "Main page cars",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "ID файла",
-                        "name": "fileId",
-                        "in": "path",
-                        "required": true
+                        "type": "integer",
+                        "description": "Limit param",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset param",
+                        "name": "offset",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "file"
+                            "$ref": "#/definitions/transport.successResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/transport.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/transport.errorResponse"
                         }
                     },
                     "500": {

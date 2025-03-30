@@ -55,7 +55,7 @@ func (h *Handler) GetAllCarsExtended(c *gin.Context) {
 // @Failure      400  {object}  errorResponse
 // @Failure      404  {object}  errorResponse
 // @Failure      500  {object}  errorResponse
-// @Router       /cars [get]
+// @Router       /cars/main [get]
 func (h *Handler) GetAllCars(c *gin.Context) {
 	ctx := c.Request.Context()
 

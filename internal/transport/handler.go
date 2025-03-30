@@ -23,13 +23,15 @@ func NewHandler(services *service.Services, repo *repository.Repos, s3 *pkg.S3Cl
 func (h *Handler) InitRoutes() *gin.Engine {
 	r := gin.Default()
 
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:3001"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-	}))
+	//r.Use(cors.New(cors.Config{
+	//	AllowOrigins:     []string{"http://localhost:3000", "http://localhost:3001"},
+	//	AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+	//	AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+	//	ExposeHeaders:    []string{"Content-Length"},
+	//	AllowCredentials: true,
+	//}))
+
+	r.Use(cors.Default())
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -40,12 +42,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		cars.GET("/extended", h.GetAllCarsExtended)
 		cars.GET("/:id", h.GetCarById)
 		cars.PATCH("/:id", h.UpdateById)
-		cars.GET("/avatar/:car_id", h.GetAvatarSource)
-	}
-
-	s3 := r.Group("/api/s3")
-	{
-		s3.GET("/auth_token", h.GetAuthToken)
 	}
 
 	details := r.Group("/api/details")
@@ -57,6 +53,11 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		details.GET("/bodies", h.GetAllBodies)
 		details.GET("/generations", h.GetAllGenerations)
 		details.GET("/colors", h.GetAllColors)
+	}
+
+	s3 := r.Group("/api/s3")
+	{
+		s3.GET("/auth_token", h.GetAuthToken)
 	}
 
 	return r
