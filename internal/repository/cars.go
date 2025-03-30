@@ -57,7 +57,7 @@ func (r *CarsRepo) GetAllCars(ctx context.Context, limit, offset int) ([]dto.Car
 	var cars []dto.Car
 
 	res := r.db.WithContext(ctx).
-		Select("cars.id", "cars.price", "cars.category_id", "cars.brand_id", "cars.model_id").
+		Select("cars.id", "cars.price", "cars.category_id", "cars.brand_id", "cars.model_id", "cars.avatar_source").
 		Preload("Category").
 		Preload("Brand").
 		Preload("Model").
