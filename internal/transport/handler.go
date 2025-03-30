@@ -56,6 +56,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	s3 := r.Group("/api/s3")
 	{
 		s3.GET("/auth_token", h.GetAuthToken)
+		s3.POST("/upload_file", h.UploadFile)
 	}
 
 	return r

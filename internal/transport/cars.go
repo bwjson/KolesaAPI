@@ -24,16 +24,19 @@ func (h *Handler) GetAllCarsExtended(c *gin.Context) {
 	limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid limit param")
+		return
 	}
 
 	offset, err := strconv.Atoi(c.DefaultQuery("offset", "0"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid offset param")
+		return
 	}
 
 	cars, total_count, err := h.services.Cars.GetAllExtended(ctx, limit, offset)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	data := map[string]interface{}{
@@ -62,16 +65,19 @@ func (h *Handler) GetAllCars(c *gin.Context) {
 	limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid limit param")
+		return
 	}
 
 	offset, err := strconv.Atoi(c.DefaultQuery("offset", "0"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid offset param")
+		return
 	}
 
 	cars, total_count, err := h.services.Cars.GetAll(ctx, limit, offset)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	data := map[string]interface{}{
@@ -99,11 +105,13 @@ func (h *Handler) GetCarById(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid car id param")
+		return
 	}
 
 	car, err := h.services.Cars.GetById(ctx, id)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	NewSuccessResponse(c, http.StatusOK, "Successfully returned a car", car)

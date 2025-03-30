@@ -34,6 +34,7 @@ type S3 struct {
 	AppKey      string `env:"S3_APP_KEY"`
 	AuthToken   string `env:"S3_AUTH_TOKEN"`
 	DownloadUrl string `env:"S3_DOWNLOAD_URL"`
+	UploadUrl   string `env:"S3_UPLOAD_URL"`
 }
 
 func LoadConfig() *Config {
@@ -57,7 +58,8 @@ func LoadConfig() *Config {
 	cfg.S3.KeyID = os.Getenv("S3_KEY_ID")
 	cfg.S3.AppKey = os.Getenv("S3_APP_KEY")
 	cfg.S3.AuthToken = os.Getenv("S3_AUTH_TOKEN")
-	cfg.S3.DownloadUrl = os.Getenv("S3_DOWNLOAD_URL")
+	cfg.S3.DownloadUrl = os.Getenv("S3_API_URL")
+	cfg.S3.UploadUrl = os.Getenv("S3_UPLOAD_URL")
 
 	return &cfg
 }

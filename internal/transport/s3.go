@@ -2,6 +2,7 @@ package transport
 
 import (
 	"github.com/gin-gonic/gin"
+	"io"
 	"net/http"
 )
 
@@ -35,4 +36,27 @@ func (h *Handler) GetAuthToken(c *gin.Context) {
 	}
 
 	NewSuccessResponse(c, http.StatusOK, "Authorization token", authResponse.AuthToken)
+}
+
+func (h *Handler) UploadFile(c *gin.Context) {
+	file, header, err := c.Request.FormFile("file")
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	defer file.Close()
+
+	fileBytes, err := io.ReadAll(file)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	url, err := h.s3.UploadFile(header.Filename, fileBytes)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	NewSuccessResponse(c, http.StatusOK, "Successfully uploaded file:", url)
 }

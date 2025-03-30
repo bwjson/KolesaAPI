@@ -16,6 +16,7 @@ func (h *Handler) GetAllCities(c *gin.Context) {
 	cities, err := h.repos.Details.GetAllCities(ctx)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	NewSuccessResponse(c, http.StatusOK, "Successfully got the cities", cities)
