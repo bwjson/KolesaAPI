@@ -35,8 +35,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	cars := r.Group("/api/cars")
 	{
-		cars.POST("", h.Create)
-		cars.GET("", h.GetAllCars)
+		cars.POST("/create", h.Create)
+		cars.GET("/main", h.GetAllCars)
 		cars.GET("/extended", h.GetAllCarsExtended)
 		cars.GET("/:id", h.GetCarById)
 		cars.PATCH("/:id", h.UpdateById)
