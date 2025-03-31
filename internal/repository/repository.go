@@ -8,8 +8,8 @@ import (
 
 type Cars interface {
 	Create(ctx context.Context, good dto.Car) (int, error)
-	GetAllCars(ctx context.Context, limit, offset int, authToken string) ([]dto.Car, int, error) // second param is total_count
-	GetAllCarsExtended(ctx context.Context, limit, offset int) ([]dto.Car, int, error)           // second param is total_count
+	GetAllCars(ctx context.Context, limit, offset int, brand string, authToken string) ([]dto.Car, int, error) // second param is total_count
+	GetAllCarsExtended(ctx context.Context, limit, offset int) ([]dto.Car, int, error)
 	GetCarById(ctx context.Context, id int) (dto.Car, error)
 	UpdateById(ctx context.Context, id int, car dto.Car) error
 	DeleteById(ctx context.Context, id int) error
@@ -24,6 +24,7 @@ type Details interface {
 	GetAllGenerations(ctx context.Context) ([]dto.Generation, error)
 	GetAllColors(ctx context.Context) ([]dto.Color, error)
 	GetSourceById(ctx context.Context, carId int) (string, error)
+	AddSourceUrl(ctx context.Context, photo dto.CarPhoto) error
 }
 
 type Repos struct {

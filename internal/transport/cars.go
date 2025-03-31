@@ -62,6 +62,7 @@ func (h *Handler) GetAllCarsExtended(c *gin.Context) {
 func (h *Handler) GetAllCars(c *gin.Context) {
 	ctx := c.Request.Context()
 
+	// pagination
 	limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid limit param")
@@ -74,7 +75,10 @@ func (h *Handler) GetAllCars(c *gin.Context) {
 		return
 	}
 
-	cars, total_count, err := h.services.Cars.GetAll(ctx, limit, offset)
+	// filters
+	brandSource := c.DefaultQuery("brand", "")
+
+	cars, total_count, err := h.services.Cars.GetAll(ctx, limit, offset, brandSource) // add all others filters
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

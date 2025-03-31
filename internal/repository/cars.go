@@ -53,20 +53,26 @@ func (r *CarsRepo) GetAllCarsExtended(ctx context.Context, limit, offset int) ([
 	return cars, int(res.RowsAffected), nil
 }
 
-func (r *CarsRepo) GetAllCars(ctx context.Context, limit, offset int, authToken string) ([]dto.Car, int, error) {
+func (r *CarsRepo) GetAllCars(ctx context.Context, limit, offset int, brandSource string, authToken string) ([]dto.Car, int, error) {
 	var cars []dto.Car
 
-	res := r.db.WithContext(ctx).
+	query := r.db.WithContext(ctx).
 		Select("cars.id", "cars.price",
 			"cars.category_id", "cars.brand_id",
 			"cars.model_id", "cars.avatar_source").
 		Preload("Category").
 		Preload("Brand").
-		Preload("Model").
-		Limit(limit).
-		Offset(offset).
-		Find(&cars)
+		Preload("Model")
 
+	if brandSource != "" {
+		query.
+			Joins("JOIN brands on brands.id = cars.brand_id").
+			Where("LOWER(brands.source) = LOWER (?)", brandSource)
+	}
+
+	res := query.Limit(limit).Offset(offset).Find(&cars)
+
+	// Authorization token
 	for i := range cars {
 		cars[i].AvatarSource += "?Authorization=" + authToken
 	}

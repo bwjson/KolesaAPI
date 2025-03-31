@@ -24,13 +24,13 @@ func (s *CarsService) GetAllExtended(ctx context.Context, limit, offset int) ([]
 	return s.repo.GetAllCarsExtended(ctx, limit, offset)
 }
 
-func (s *CarsService) GetAll(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
+func (s *CarsService) GetAll(ctx context.Context, limit, offset int, brandSource string) ([]dto.Car, int, error) {
 	credentials, err := s.s3.GetS3Credentials()
 	if err != nil {
 		return nil, 0, err
 	}
 
-	return s.repo.GetAllCars(ctx, limit, offset, credentials.AuthToken)
+	return s.repo.GetAllCars(ctx, limit, offset, brandSource, credentials.AuthToken)
 }
 
 func (s *CarsService) GetById(ctx context.Context, id int) (dto.Car, error) {

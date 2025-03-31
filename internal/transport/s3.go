@@ -52,6 +52,8 @@ func (h *Handler) UploadFile(c *gin.Context) {
 		return
 	}
 
+	// change header.Filename to custom unique filename
+
 	url, err := h.s3.UploadFile(header.Filename, fileBytes)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())

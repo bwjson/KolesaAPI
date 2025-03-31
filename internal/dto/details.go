@@ -6,8 +6,9 @@ type Category struct {
 }
 
 type Brand struct {
-	ID   uint   `gorm:"primaryKey" json:"id"`
-	Name string `gorm:"unique;not null" json:"name"`
+	ID     uint   `gorm:"primaryKey" json:"id"`
+	Name   string `gorm:"unique;not null" json:"name"`
+	Source string `json:"source"` // add later gorm tags
 }
 
 type Color struct {
@@ -19,6 +20,7 @@ type Model struct {
 	ID      uint   `gorm:"primaryKey" json:"id"`
 	BrandID uint   `gorm:"not null; constraint:OnDelete:CASCADE;" json:"brand_id"`
 	Name    string `gorm:"unique;not null" json:"name"`
+	Source  string `json:"source"` // add later gorm tags
 }
 
 type Generation struct {

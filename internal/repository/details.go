@@ -110,3 +110,13 @@ func (r *DetailsRepo) GetSourceById(ctx context.Context, carId int) (string, err
 
 	return carPhoto.PhotoUrl, nil
 }
+
+func (r *DetailsRepo) AddSourceUrl(ctx context.Context, photo dto.CarPhoto) error {
+	res := r.db.WithContext(ctx).Create(&photo)
+
+	if res.Error != nil {
+		return res.Error
+	}
+
+	return nil
+}

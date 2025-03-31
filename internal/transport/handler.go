@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
+	"net/http"
 )
 
 type Handler struct {
@@ -32,6 +33,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	}))
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Your service is live 🎉",
+		})
+	})
 
 	cars := r.Group("/api/cars")
 	{
