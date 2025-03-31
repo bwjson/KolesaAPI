@@ -31,14 +31,15 @@ type Db struct {
 
 type S3 struct {
 	KeyID       string `env:"S3_KEY_ID"`
+	BucketID    string `env:"S3_BUCKET_ID"`
 	AppKey      string `env:"S3_APP_KEY"`
 	AuthToken   string `env:"S3_AUTH_TOKEN"`
+	ApiUrl      string `env:"S3_API_URL"`
 	DownloadUrl string `env:"S3_DOWNLOAD_URL"`
 	UploadUrl   string `env:"S3_UPLOAD_URL"`
 }
 
 func LoadConfig() *Config {
-	// PRODUCTION DELETE
 	if err := godotenv.Load(); err != nil {
 		log.Println("Error loading .env file")
 	}
@@ -56,9 +57,11 @@ func LoadConfig() *Config {
 	cfg.HttpSrv.Timeout, _ = time.ParseDuration(os.Getenv("HTTP_TIMEOUT"))
 	cfg.HttpSrv.IdleTimeout, _ = time.ParseDuration(os.Getenv("HTTP_IDLE_TIMEOUT"))
 	cfg.S3.KeyID = os.Getenv("S3_KEY_ID")
+	cfg.S3.BucketID = os.Getenv("S3_BUCKET_ID")
 	cfg.S3.AppKey = os.Getenv("S3_APP_KEY")
 	cfg.S3.AuthToken = os.Getenv("S3_AUTH_TOKEN")
-	cfg.S3.DownloadUrl = os.Getenv("S3_API_URL")
+	cfg.S3.ApiUrl = os.Getenv("S3_API_URL")
+	cfg.S3.DownloadUrl = os.Getenv("S3_DOWNLOAD_URL_URL")
 	cfg.S3.UploadUrl = os.Getenv("S3_UPLOAD_URL")
 
 	return &cfg

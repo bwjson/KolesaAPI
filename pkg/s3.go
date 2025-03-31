@@ -11,8 +11,10 @@ import (
 
 type S3Client struct {
 	KeyID       string
+	BucketID    string
 	AppKey      string
 	AuthToken   string
+	ApiUrl      string
 	DownloadUrl string
 	UploadUrl   string
 	log         *slog.Logger
@@ -29,11 +31,13 @@ type UploadUrlResponse struct {
 	UploadUrl          string `json:"uploadUrl"`
 }
 
-func NewS3Client(keyID, appKey, authToken, downloadUrl, uploadUrl string, log *slog.Logger) (*S3Client, error) {
+func NewS3Client(keyID, bucketID, appKey, authToken, apiUrl, downloadUrl, uploadUrl string, log *slog.Logger) (*S3Client, error) {
 	client := S3Client{
 		KeyID:       keyID,
+		BucketID:    bucketID,
 		AppKey:      appKey,
 		AuthToken:   authToken,
+		ApiUrl:      apiUrl,
 		DownloadUrl: downloadUrl,
 		UploadUrl:   uploadUrl,
 		log:         log,
@@ -42,30 +46,32 @@ func NewS3Client(keyID, appKey, authToken, downloadUrl, uploadUrl string, log *s
 	return &client, nil
 }
 
-func (s3 *S3Client) GetS3Credentials() (*AuthResponse, error) {
-	req, err := http.NewRequest("GET", "https://api.backblazeb2.com/b2api/v2/b2_authorize_account", nil)
+func (s3 *S3Client) GetS3Credentials() (AuthResponse, error) {
+	url := fmt.Sprintf("%s/b2api/v2/b2_authorize_account", s3.ApiUrl)
+	s3.log.Info(url)
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, err
+		return AuthResponse{}, err
 	}
 	req.SetBasicAuth(s3.KeyID, s3.AppKey)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return AuthResponse{}, err
 	}
 	defer resp.Body.Close()
 
 	var authResp AuthResponse
 	if err := json.NewDecoder(resp.Body).Decode(&authResp); err != nil {
-		return nil, err
+		return AuthResponse{}, err
 	}
 
-	return &authResp, nil
+	return authResp, nil
 }
 
 func (s3 *S3Client) DownloadFile(bucketName, fileId string) ([]byte, error) {
-	url := fmt.Sprintf("%s/file/%s/%s", s3.DownloadUrl, bucketName, fileId)
+	url := fmt.Sprintf("%s/file/%s/%s", s3.ApiUrl, bucketName, fileId)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -89,7 +95,7 @@ func (s3 *S3Client) DownloadFile(bucketName, fileId string) ([]byte, error) {
 }
 
 func (s3 *S3Client) getUploadUrl() (string, string, error) {
-	url := fmt.Sprintf("%s/b2api/v3/b2_get_upload_url?bucketId=%s", "https://api006.backblazeb2.com", "4a61547d0966c63d99500f10")
+	url := fmt.Sprintf("%s/b2api/v3/b2_get_upload_url?bucketId=%s", s3.ApiUrl, s3.BucketID)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -137,18 +143,14 @@ func (s3 *S3Client) UploadFile(filename string, fileData []byte) (string, error)
 	}
 	defer resp.Body.Close()
 
-	s3.log.Info(s3.AuthToken)
-
 	if resp.StatusCode != 200 {
 		return "", fmt.Errorf("failed to upload file: %s", resp.Status)
 	}
 
-	var result struct {
-		FileURL string `json:"fileURL"`
-	}
+	var result string
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return "", err
 	}
 
-	return result.FileURL, nil
+	return result, nil
 }

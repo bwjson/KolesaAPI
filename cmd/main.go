@@ -30,7 +30,7 @@ func main() {
 		log.Error("Cannot connect to Postgres", err.Error())
 	}
 
-	s3, err := pkg.NewS3Client(cfg.S3.KeyID, cfg.S3.AppKey, cfg.S3.AuthToken, cfg.S3.DownloadUrl, cfg.S3.UploadUrl, log)
+	s3, err := pkg.NewS3Client(cfg.S3.KeyID, cfg.S3.BucketID, cfg.S3.AppKey, cfg.S3.AuthToken, cfg.S3.ApiUrl, cfg.S3.DownloadUrl, cfg.S3.UploadUrl, log)
 	if err != nil {
 		log.Error("Cannot connect to S3", err.Error())
 	}
@@ -39,7 +39,7 @@ func main() {
 
 	repo := repository.NewRepos(db)
 
-	services := service.NewServices(repo)
+	services := service.NewServices(repo, s3)
 
 	h := transport.NewHandler(services, repo, s3)
 

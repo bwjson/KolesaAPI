@@ -53,17 +53,23 @@ func (r *CarsRepo) GetAllCarsExtended(ctx context.Context, limit, offset int) ([
 	return cars, int(res.RowsAffected), nil
 }
 
-func (r *CarsRepo) GetAllCars(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
+func (r *CarsRepo) GetAllCars(ctx context.Context, limit, offset int, authToken string) ([]dto.Car, int, error) {
 	var cars []dto.Car
 
 	res := r.db.WithContext(ctx).
-		Select("cars.id", "cars.price", "cars.category_id", "cars.brand_id", "cars.model_id", "cars.avatar_source").
+		Select("cars.id", "cars.price",
+			"cars.category_id", "cars.brand_id",
+			"cars.model_id", "cars.avatar_source").
 		Preload("Category").
 		Preload("Brand").
 		Preload("Model").
 		Limit(limit).
 		Offset(offset).
 		Find(&cars)
+
+	for i := range cars {
+		cars[i].AvatarSource += "?Authorization=" + authToken
+	}
 
 	if res.Error != nil {
 		return nil, 0, errors.New("No cars found")
