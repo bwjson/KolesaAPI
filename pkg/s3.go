@@ -48,7 +48,6 @@ func NewS3Client(keyID, bucketID, appKey, authToken, apiUrl, downloadUrl, upload
 
 func (s3 *S3Client) GetS3Credentials() (AuthResponse, error) {
 	url := fmt.Sprintf("%s/b2api/v2/b2_authorize_account", s3.ApiUrl)
-	s3.log.Info(url)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return AuthResponse{}, err

@@ -2,7 +2,6 @@ package config
 
 import (
 	"github.com/joho/godotenv"
-	"log"
 	"os"
 	"time"
 )
@@ -40,9 +39,8 @@ type S3 struct {
 }
 
 func LoadConfig() *Config {
-	if err := godotenv.Load(); err != nil {
-		log.Println("Error loading .env file")
-	}
+	// Not used in production, only development
+	godotenv.Load()
 
 	var cfg Config
 

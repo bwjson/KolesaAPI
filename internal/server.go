@@ -22,8 +22,13 @@ func NewServer(cfg config.Config, handler *gin.Engine) *Server {
 	}
 }
 
-func (s *Server) Run() {
-	s.httpServer.ListenAndServe()
+func (s *Server) Run() error {
+	err := s.httpServer.ListenAndServe()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *Server) Stop(ctx context.Context) error {
