@@ -30,6 +30,7 @@ func (h *Handler) GetAllCities(c *gin.Context) {
 // @Router       /details/brands [get]
 func (h *Handler) GetAllBrands(c *gin.Context) {
 	ctx := c.Request.Context()
+
 	brands, err := h.repos.Details.GetAllBrands(ctx)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
@@ -47,13 +48,34 @@ func (h *Handler) GetAllBrands(c *gin.Context) {
 // @Router       /details/models [get]
 func (h *Handler) GetAllModels(c *gin.Context) {
 	ctx := c.Request.Context()
-	models, err := h.repos.Details.GetAllModels(ctx)
+
+	brandSource := c.DefaultQuery("brand", "")
+	models, err := h.repos.Details.GetAllModels(ctx, brandSource)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	NewSuccessResponse(c, http.StatusOK, "Successfully got the models", models)
+}
+
+// @Summary      Get all generations
+// @Tags         details
+// @Produce      json
+// @Success      200  {object}  successResponse
+// @Failure      500  {object}  errorResponse
+// @Router       /details/generations [get]
+func (h *Handler) GetAllGenerations(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	modelSource := c.DefaultQuery("model", "")
+	generations, err := h.repos.Details.GetAllGenerations(ctx, modelSource)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	NewSuccessResponse(c, http.StatusOK, "Successfully got the generations", generations)
 }
 
 // @Summary      Get all categories
@@ -88,23 +110,6 @@ func (h *Handler) GetAllBodies(c *gin.Context) {
 	}
 
 	NewSuccessResponse(c, http.StatusOK, "Successfully got the bodies", bodies)
-}
-
-// @Summary      Get all generations
-// @Tags         details
-// @Produce      json
-// @Success      200  {object}  successResponse
-// @Failure      500  {object}  errorResponse
-// @Router       /details/generations [get]
-func (h *Handler) GetAllGenerations(c *gin.Context) {
-	ctx := c.Request.Context()
-	generations, err := h.repos.Details.GetAllGenerations(ctx)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	NewSuccessResponse(c, http.StatusOK, "Successfully got the generations", generations)
 }
 
 // @Summary      Get all colors

@@ -53,7 +53,8 @@ func (r *CarsRepo) GetAllCarsExtended(ctx context.Context, limit, offset int) ([
 	return cars, int(res.RowsAffected), nil
 }
 
-func (r *CarsRepo) GetAllCars(ctx context.Context, limit, offset int, brandSource string, authToken string) ([]dto.Car, int, error) {
+func (r *CarsRepo) GetAllCars(ctx context.Context, limit, offset int,
+	brandSource, modelSource, generationSource, citySource string, authToken string) ([]dto.Car, int, error) {
 	var cars []dto.Car
 
 	query := r.db.WithContext(ctx).
@@ -68,6 +69,24 @@ func (r *CarsRepo) GetAllCars(ctx context.Context, limit, offset int, brandSourc
 		query.
 			Joins("JOIN brands on brands.id = cars.brand_id").
 			Where("LOWER(brands.source) = LOWER (?)", brandSource)
+	}
+
+	if modelSource != "" {
+		query.
+			Joins("JOIN models on models.id = cars.model_id").
+			Where("LOWER(models.source) = LOWER(?)", modelSource)
+	}
+
+	if generationSource != "" {
+		query.
+			Joins("JOIN generations on generations.id = cars.generation_id").
+			Where("LOWER(generations.source) = LOWER(?)", generationSource)
+	}
+
+	if citySource != "" {
+		query.
+			Joins("JOIN cities on cities.id = cars.city_id").
+			Where("LOWER(cities.source) = LOWER(?)", citySource)
 	}
 
 	res := query.Limit(limit).Offset(offset).Find(&cars)

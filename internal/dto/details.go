@@ -17,16 +17,19 @@ type Color struct {
 }
 
 type Model struct {
-	ID      uint   `gorm:"primaryKey" json:"id"`
-	BrandID uint   `gorm:"not null; constraint:OnDelete:CASCADE;" json:"brand_id"`
-	Name    string `gorm:"unique;not null" json:"name"`
-	Source  string `json:"source"` // add later gorm tags
+	ID          uint   `gorm:"primaryKey" json:"id"`
+	BrandID     uint   `gorm:"not null; constraint:OnDelete:CASCADE;" json:"brand_id"`
+	BrandSource string `json:"brand_source"`
+	Name        string `gorm:"unique;not null" json:"name"`
+	Source      string `json:"source"` // add later gorm tags
 }
 
 type Generation struct {
-	ID      uint   `gorm:"primaryKey" json:"id"`
-	ModelID uint   `gorm:"not null; constraint:OnDelete:CASCADE;" json:"model_id"`
-	Name    string `gorm:"not null" json:"name"`
+	ID          uint   `gorm:"primaryKey" json:"id"`
+	ModelID     uint   `gorm:"not null; constraint:OnDelete:CASCADE;" json:"model_id"`
+	ModelSource string `json:"model_source"`
+	Name        string `gorm:"not null" json:"name"`
+	Source      string `json:"source"`
 }
 
 type Body struct {
@@ -35,8 +38,9 @@ type Body struct {
 }
 
 type City struct {
-	ID   uint   `gorm:"primaryKey" json:"id"`
-	Name string `gorm:"unique;not null" json:"name"`
+	ID     uint   `gorm:"primaryKey" json:"id"`
+	Name   string `gorm:"unique;not null" json:"name"`
+	Source string `json:"source"`
 }
 
 type CarPhoto struct {

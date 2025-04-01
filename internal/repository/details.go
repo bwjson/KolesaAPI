@@ -39,16 +39,40 @@ func (r *DetailsRepo) GetAllBrands(ctx context.Context) ([]dto.Brand, error) {
 	return brands, nil
 }
 
-func (r *DetailsRepo) GetAllModels(ctx context.Context) ([]dto.Model, error) {
+func (r *DetailsRepo) GetAllModels(ctx context.Context, brandSource string) ([]dto.Model, error) {
 	var models []dto.Model
 
-	res := r.db.WithContext(ctx).Find(&models)
+	query := r.db.WithContext(ctx).Model(&models)
+
+	if brandSource != "" {
+		query = query.Where("brand_source = ?", brandSource)
+	}
+
+	res := query.Find(&models)
 
 	if res.Error != nil {
 		return nil, errors.New("No models found")
 	}
 
 	return models, nil
+}
+
+func (r *DetailsRepo) GetAllGenerations(ctx context.Context, modelSource string) ([]dto.Generation, error) {
+	var generations []dto.Generation
+
+	query := r.db.WithContext(ctx).Model(&generations)
+
+	if modelSource != "" {
+		query = query.Where("model_source = ?", modelSource)
+	}
+
+	res := query.Find(&generations)
+
+	if res.Error != nil {
+		return nil, errors.New("No generations found")
+	}
+
+	return generations, nil
 }
 
 func (r *DetailsRepo) GetAllCategories(ctx context.Context) ([]dto.Category, error) {
@@ -73,18 +97,6 @@ func (r *DetailsRepo) GetAllBodies(ctx context.Context) ([]dto.Body, error) {
 	}
 
 	return bodies, nil
-}
-
-func (r *DetailsRepo) GetAllGenerations(ctx context.Context) ([]dto.Generation, error) {
-	var generations []dto.Generation
-
-	res := r.db.WithContext(ctx).Find(&generations)
-
-	if res.Error != nil {
-		return nil, errors.New("No generations found")
-	}
-
-	return generations, nil
 }
 
 func (r *DetailsRepo) GetAllColors(ctx context.Context) ([]dto.Color, error) {
@@ -119,4 +131,16 @@ func (r *DetailsRepo) AddSourceUrl(ctx context.Context, photo dto.CarPhoto) erro
 	}
 
 	return nil
+}
+
+func (r *DetailsRepo) GetModelsByBrand(ctx context.Context, brand string) ([]dto.Model, error) {
+	var models []dto.Model
+
+	res := r.db.WithContext(ctx).Find(&models, "brand = ?", brand)
+
+	if res.Error != nil {
+		return nil, errors.New("No sources found")
+	}
+
+	return models, nil
 }

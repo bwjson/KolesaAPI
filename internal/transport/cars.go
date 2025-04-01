@@ -77,8 +77,12 @@ func (h *Handler) GetAllCars(c *gin.Context) {
 
 	// filters
 	brandSource := c.DefaultQuery("brand", "")
+	modelSource := c.DefaultQuery("model", "")
+	citySource := c.DefaultQuery("city", "")
+	generationSource := c.DefaultQuery("generation", "")
 
-	cars, total_count, err := h.services.Cars.GetAll(ctx, limit, offset, brandSource) // add all others filters
+	cars, total_count, err := h.services.Cars.GetAll(ctx, limit, offset,
+		brandSource, modelSource, generationSource, citySource) // add all others filters
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
