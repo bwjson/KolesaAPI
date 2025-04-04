@@ -9,7 +9,7 @@ import (
 type Cars interface {
 	Create(ctx context.Context, good dto.Car) (int, error)
 	GetAllCars(ctx context.Context, limit, offset int,
-		brandSource, modelSource, generationSource, citySource string, authToken string) ([]dto.Car, int, error) // second param is total_count
+		brandSource, modelSource, generationSource, citySource string, authToken string) ([]dto.Car, int64, error) // second param is total_count
 	GetAllCarsExtended(ctx context.Context, limit, offset int) ([]dto.Car, int, error)
 	GetCarById(ctx context.Context, id int) (dto.Car, error)
 	UpdateById(ctx context.Context, id int, car dto.Car) error

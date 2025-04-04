@@ -75,11 +75,14 @@ func (h *Handler) GetAllCars(c *gin.Context) {
 		return
 	}
 
-	// filters
+	// join filters
 	brandSource := c.DefaultQuery("brand", "")
 	modelSource := c.DefaultQuery("model", "")
 	citySource := c.DefaultQuery("city", "")
 	generationSource := c.DefaultQuery("generation", "")
+
+	// in-model filters
+	//year := c.DefaultQuery("year", "")
 
 	cars, total_count, err := h.services.Cars.GetAll(ctx, limit, offset,
 		brandSource, modelSource, generationSource, citySource) // add all others filters

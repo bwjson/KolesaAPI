@@ -54,10 +54,11 @@ func (r *CarsRepo) GetAllCarsExtended(ctx context.Context, limit, offset int) ([
 }
 
 func (r *CarsRepo) GetAllCars(ctx context.Context, limit, offset int,
-	brandSource, modelSource, generationSource, citySource string, authToken string) ([]dto.Car, int, error) {
+	brandSource, modelSource, generationSource, citySource string, authToken string) ([]dto.Car, int64, error) {
 	var cars []dto.Car
+	var totalCount int64
 
-	query := r.db.WithContext(ctx).
+	queryTotal := r.db.WithContext(ctx).
 		Select("cars.id", "cars.price",
 			"cars.category_id", "cars.brand_id",
 			"cars.model_id", "cars.avatar_source").
@@ -66,30 +67,68 @@ func (r *CarsRepo) GetAllCars(ctx context.Context, limit, offset int,
 		Preload("Model")
 
 	if brandSource != "" {
-		query.
+		queryTotal.
 			Joins("JOIN brands on brands.id = cars.brand_id").
 			Where("LOWER(brands.source) = LOWER (?)", brandSource)
 	}
 
 	if modelSource != "" {
-		query.
+		queryTotal.
 			Joins("JOIN models on models.id = cars.model_id").
 			Where("LOWER(models.source) = LOWER(?)", modelSource)
 	}
 
 	if generationSource != "" {
-		query.
+		queryTotal.
 			Joins("JOIN generations on generations.id = cars.generation_id").
 			Where("LOWER(generations.source) = LOWER(?)", generationSource)
 	}
 
 	if citySource != "" {
-		query.
+		queryTotal.
 			Joins("JOIN cities on cities.id = cars.city_id").
 			Where("LOWER(cities.source) = LOWER(?)", citySource)
 	}
 
-	res := query.Limit(limit).Offset(offset).Find(&cars)
+	res := queryTotal.Find(&cars)
+
+	totalCount = res.RowsAffected
+
+	// double code
+
+	queryCars := r.db.WithContext(ctx).
+		Select("cars.id", "cars.price",
+			"cars.category_id", "cars.brand_id",
+			"cars.model_id", "cars.avatar_source").
+		Preload("Category").
+		Preload("Brand").
+		Preload("Model")
+
+	if brandSource != "" {
+		queryCars.
+			Joins("JOIN brands on brands.id = cars.brand_id").
+			Where("LOWER(brands.source) = LOWER (?)", brandSource)
+	}
+
+	if modelSource != "" {
+		queryCars.
+			Joins("JOIN models on models.id = cars.model_id").
+			Where("LOWER(models.source) = LOWER(?)", modelSource)
+	}
+
+	if generationSource != "" {
+		queryCars.
+			Joins("JOIN generations on generations.id = cars.generation_id").
+			Where("LOWER(generations.source) = LOWER(?)", generationSource)
+	}
+
+	if citySource != "" {
+		queryCars.
+			Joins("JOIN cities on cities.id = cars.city_id").
+			Where("LOWER(cities.source) = LOWER(?)", citySource)
+	}
+
+	res = queryCars.Limit(limit).Offset(offset).Find(&cars)
 
 	// Authorization token
 	for i := range cars {
@@ -100,7 +139,7 @@ func (r *CarsRepo) GetAllCars(ctx context.Context, limit, offset int,
 		return nil, 0, errors.New("No cars found")
 	}
 
-	return cars, int(res.RowsAffected), nil
+	return cars, totalCount, nil
 }
 
 func (r *CarsRepo) GetCarById(ctx context.Context, id int) (dto.Car, error) {

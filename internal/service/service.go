@@ -12,7 +12,7 @@ type Cars interface {
 	GetAllExtended(ctx context.Context, limit, offset int) ([]dto.Car, int, error)
 	GetById(ctx context.Context, id int) (dto.Car, error)
 	GetAll(ctx context.Context, limit, offset int,
-		brandSource, modelSource, generationSource, citySource string) ([]dto.Car, int, error) // second param is total_count
+		brandSource, modelSource, generationSource, citySource string) ([]dto.Car, int64, error) // second param is total_count
 	UpdateById(ctx context.Context, id int, good dto.Car) error
 	DeleteById(ctx context.Context, id int) error
 }

@@ -25,7 +25,7 @@ func (s *CarsService) GetAllExtended(ctx context.Context, limit, offset int) ([]
 }
 
 func (s *CarsService) GetAll(ctx context.Context, limit, offset int,
-	brandSource, modelSource, generationSource, citySource string) ([]dto.Car, int, error) {
+	brandSource, modelSource, generationSource, citySource string) ([]dto.Car, int64, error) {
 	credentials, err := s.s3.GetS3Credentials()
 	if err != nil {
 		return nil, 0, err
