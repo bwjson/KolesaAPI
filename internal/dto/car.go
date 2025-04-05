@@ -4,7 +4,7 @@ import "time"
 
 type Car struct {
 	// Relationships IDs
-	ID           uint `gorm:"primaryKey" json:"-"`
+	ID           uint `gorm:"primaryKey" json:"id"`
 	UserID       uint `gorm:"not null" json:"-"`
 	CategoryID   uint `gorm:"not null" json:"-"`
 	BrandID      uint `gorm:"not null" json:"-"`
