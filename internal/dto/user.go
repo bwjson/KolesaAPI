@@ -3,7 +3,7 @@ package dto
 import "time"
 
 type User struct {
-	Id           int       `json:"id"`
+	Id           int       `json:"-"`
 	PhoneNumber  string    `gorm:"unique;not null" json:"phone_number"`
 	Username     string    `json:"username"`
 	BankCard     string    `json:"bank_card"`

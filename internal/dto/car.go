@@ -3,31 +3,37 @@ package dto
 import "time"
 
 type Car struct {
-	ID               uint        `gorm:"primaryKey" json:"id,omitempty"`
-	UserID           uint        `gorm:"not null" json:"user_id,omitempty"`
-	CategoryID       uint        `gorm:"not null" json:"category_id,omitempty"`
-	BrandID          uint        `gorm:"not null" json:"brand_id,omitempty"`
-	ColorID          uint        `gorm:"not null" json:"color_id,omitempty"`
-	GenerationID     uint        `gorm:"not null" json:"generation_id,omitempty"`
-	BodyID           uint        `gorm:"not null" json:"body_id,omitempty"`
-	CityID           uint        `gorm:"not null" json:"city_id,omitempty"`
-	ModelID          uint        `gorm:"not null" json:"model_id,omitempty"`
-	User             *User       `gorm:"foreignKey:UserID" json:"user,omitempty"`
-	Category         *Category   `gorm:"foreignKey:CategoryID" json:"category,omitempty"`
-	Brand            *Brand      `gorm:"foreignKey:BrandID" json:"brand,omitempty"`
-	Color            *Color      `gorm:"foreignKey:ColorID" json:"color,omitempty"`
-	Generation       *Generation `gorm:"foreignKey:GenerationID" json:"generation,omitempty"`
-	Body             *Body       `gorm:"foreignKey:BodyID" json:"body,omitempty"`
-	City             *City       `gorm:"foreignKey:CityID" json:"city,omitempty"`
-	Model            *Model      `gorm:"foreignKey:ModelID" json:"model,omitempty"`
-	AvatarSource     string      `json:"avatar_source,omitempty"`
-	EngineVolume     string      `json:"engine_volume,omitempty"`
-	Mileage          string      `json:"mileage,omitempty"`
-	WheelDrive       string      `json:"wheel_drive,omitempty"`
-	SteeringWheel    string      `json:"steering_wheel,omitempty"`
-	CustomsClearance bool        `json:"customs_clearance,omitempty"`
-	Description      string      `json:"description,omitempty"`
-	Price            string      `json:"price,omitempty"`
-	CreatedAt        time.Time   `gorm:"autoCreateTime" json:"created_at,omitempty"`
-	UpdatedAt        time.Time   `gorm:"autoUpdateTime" json:"updated_at,omitempty"`
+	// Relationships IDs
+	ID           uint `gorm:"primaryKey" json:"-"`
+	UserID       uint `gorm:"not null" json:"-"`
+	CategoryID   uint `gorm:"not null" json:"-"`
+	BrandID      uint `gorm:"not null" json:"-"`
+	ColorID      uint `gorm:"not null" json:"-"`
+	GenerationID uint `gorm:"not null" json:"-"`
+	BodyID       uint `gorm:"not null" json:"-"`
+	CityID       uint `gorm:"not null" json:"-"`
+	ModelID      uint `gorm:"not null" json:"-"`
+	// Relationships with details
+	User       *User       `gorm:"foreignKey:UserID" json:"user,omitempty"`
+	Category   *Category   `gorm:"foreignKey:CategoryID" json:"category,omitempty"`
+	Brand      *Brand      `gorm:"foreignKey:BrandID" json:"brand,omitempty"`
+	Model      *Model      `gorm:"foreignKey:ModelID" json:"model,omitempty"`
+	Generation *Generation `gorm:"foreignKey:GenerationID" json:"generation,omitempty"`
+	City       *City       `gorm:"foreignKey:CityID" json:"city,omitempty"`
+	Color      *Color      `gorm:"foreignKey:ColorID" json:"color,omitempty"`
+	Body       *Body       `gorm:"foreignKey:BodyID" json:"body,omitempty"`
+	// In place params
+	Price            string `json:"price,omitempty"`
+	EngineVolume     string `json:"engine_volume,omitempty"`
+	Mileage          string `json:"mileage,omitempty"`
+	CustomsClearance bool   `json:"customs_clearance,omitempty"`
+	Description      string `json:"description,omitempty"`
+	// May be relationship?
+	SteeringWheel string `json:"steering_wheel,omitempty"` // Left/Right
+	WheelDrive    string `json:"wheel_drive,omitempty"`    // FWD/RWD/AWD
+	// Avatar url
+	AvatarSource string `json:"avatar_source,omitempty"`
+	// Time params
+	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at,omitempty"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at,omitempty"`
 }
