@@ -108,7 +108,7 @@ func (h *Handler) GetAllCars(c *gin.Context) {
 	generationSource := c.DefaultQuery("generation", "")
 	citySource := c.DefaultQuery("city", "")
 	colorSource := c.DefaultQuery("color", "")
-	bodySource := c.DefaultQuery("body_source", "")
+	bodySource := c.DefaultQuery("body", "")
 
 	// in-model filters
 	priceStart, err := parseQueryParam("price_start", c, 0)
