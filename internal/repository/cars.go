@@ -128,11 +128,13 @@ func (r *CarsRepo) GetAllCars(ctx context.Context, filters map[string]interface{
 		baseQuery = baseQuery.Where("CAST(cars.mileage AS INTEGER) <= ?", vEnd)
 	}
 
-	// Get total_count before pagination params
+	// Get total_count before pagination params and exclude offset
 	err := baseQuery.Count(&totalCount).Error
 	if err != nil {
 		return nil, 0, errors.New("Failed to count cars")
 	}
+
+	totalCount -= int64(offset)
 
 	// Pagination
 	if v, ok := filters["limit"].(int); ok {
