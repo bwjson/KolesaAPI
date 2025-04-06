@@ -7,6 +7,7 @@ import (
 	"github.com/bwjson/kolesa_api/internal/dto"
 	_ "github.com/lib/pq"
 	"gorm.io/gorm"
+	"log"
 )
 
 type CarsRepo struct {
@@ -134,7 +135,7 @@ func (r *CarsRepo) GetAllCars(ctx context.Context, filters map[string]interface{
 		return nil, 0, errors.New("Failed to count cars")
 	}
 
-	totalCount -= int64(offset)
+	log.Println(totalCount, offset)
 
 	// Pagination
 	if v, ok := filters["limit"].(int); ok {
@@ -160,7 +161,7 @@ func (r *CarsRepo) GetAllCars(ctx context.Context, filters map[string]interface{
 		cars[i].AvatarSource += "?Authorization=" + authToken
 	}
 
-	return cars, totalCount, nil
+	return cars, totalCount - int64(offset), nil
 }
 
 func (r *CarsRepo) GetCarById(ctx context.Context, id int) (dto.Car, error) {
