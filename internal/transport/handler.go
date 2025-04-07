@@ -66,5 +66,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		s3.POST("/upload_file", h.UploadFile)
 	}
 
+	user := r.Group("/api/users")
+	{
+		user.POST("/request_code")
+		user.POST("/verify_code")
+		user.POST("/refresh")
+	}
+
 	return r
 }

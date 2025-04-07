@@ -146,6 +146,9 @@ func (r *CarsRepo) GetAllCars(ctx context.Context, filters map[string]interface{
 		offset = v
 	}
 
+	// From client we are getting number of pages
+	offset *= limit
+
 	err = baseQuery.
 		Select("cars.id", "cars.price", "cars.category_id", "cars.brand_id", "cars.model_id", "cars.avatar_source").
 		Preload("Category").
