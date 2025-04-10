@@ -1,6 +1,7 @@
 package transport
 
 import (
+	"github.com/bwjson/kolesa_api/internal/grpc"
 	"github.com/bwjson/kolesa_api/internal/repository"
 	"github.com/bwjson/kolesa_api/internal/service"
 	"github.com/bwjson/kolesa_api/pkg"
@@ -15,10 +16,11 @@ type Handler struct {
 	services *service.Services
 	repos    *repository.Repos
 	s3       *pkg.S3Client
+	gRPC     *grpc.Client
 }
 
-func NewHandler(services *service.Services, repo *repository.Repos, s3 *pkg.S3Client) *Handler {
-	return &Handler{services: services, repos: repo, s3: s3}
+func NewHandler(services *service.Services, repo *repository.Repos, s3 *pkg.S3Client, gRPC *grpc.Client) *Handler {
+	return &Handler{services: services, repos: repo, s3: s3, gRPC: gRPC}
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
@@ -66,11 +68,20 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		s3.POST("/upload_file", h.UploadFile)
 	}
 
-	user := r.Group("/api/users")
+	auth := r.Group("/api/auth")
 	{
-		user.POST("/request_code")
-		user.POST("/verify_code")
-		user.POST("/refresh")
+		auth.POST("/request_code", h.RequestCode)
+		auth.POST("/verify_code", h.VerifyCode)
+		auth.POST("/refresh", h.RefreshAccessToken)
+	}
+
+	users := r.Group("/api/users")
+	{
+		users.POST("/", h.CreateUser)
+		users.GET("/", h.GetUsers)
+		users.GET("/:id", h.GetUserByID)
+		users.PUT("/", h.UpdateUser)
+		users.DELETE("/:id", h.DeleteUser)
 	}
 
 	return r

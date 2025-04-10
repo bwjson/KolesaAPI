@@ -164,7 +164,7 @@ func (r *CarsRepo) GetAllCars(ctx context.Context, filters map[string]interface{
 		cars[i].AvatarSource += "?Authorization=" + authToken
 	}
 
-	return cars, totalCount - int64(offset), nil
+	return cars, totalCount, nil
 }
 
 func (r *CarsRepo) GetCarById(ctx context.Context, id int) (dto.Car, error) {

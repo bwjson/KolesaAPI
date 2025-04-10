@@ -215,4 +215,6 @@ func (h *Handler) UpdateById(c *gin.Context) {}
 
 func (h *Handler) DeleteById(c *gin.Context) {}
 
-func (h *Handler) Create(c *gin.Context) {}
+func (h *Handler) Create(c *gin.Context) {
+
+}

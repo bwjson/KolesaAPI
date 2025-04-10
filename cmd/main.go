@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	_ "github.com/bwjson/kolesa_api/docs"
 	"github.com/bwjson/kolesa_api/internal"
 	"github.com/bwjson/kolesa_api/internal/config"
+	"github.com/bwjson/kolesa_api/internal/grpc"
 	"github.com/bwjson/kolesa_api/internal/postgres"
 	"github.com/bwjson/kolesa_api/internal/repository"
 	"github.com/bwjson/kolesa_api/internal/service"
@@ -23,6 +25,8 @@ import (
 // @host      kolesaapi.onrender.com
 // @BasePath  /api
 func main() {
+	ctx := context.Background()
+
 	cfg := config.LoadConfig()
 
 	log := setupLogger(cfg.Env)
@@ -40,11 +44,13 @@ func main() {
 	}
 	log.Info("S3 started with", slog.String("API_URL", cfg.S3.ApiUrl))
 
+	gRPC, err := grpc.New(ctx, log, cfg.GRPC.Address, cfg.GRPC.Timeout, cfg.GRPC.RetriesCount)
+
 	repo := repository.NewRepos(db)
 
 	services := service.NewServices(repo, s3)
 
-	h := transport.NewHandler(services, repo, s3)
+	h := transport.NewHandler(services, repo, s3, gRPC)
 
 	s := internal.NewServer(*cfg, h.InitRoutes())
 

@@ -28,14 +28,24 @@ type Details interface {
 	AddSourceUrl(ctx context.Context, photo dto.CarPhoto) error
 }
 
+type Users interface {
+	Create(ctx context.Context, user dto.User) error
+	GetAll(ctx context.Context) ([]dto.User, error)
+	GetByID(ctx context.Context, id int) (dto.User, error)
+	Update(ctx context.Context, user dto.User) error
+	Delete(ctx context.Context, id int) error
+}
+
 type Repos struct {
 	Cars    Cars
 	Details Details
+	Users   Users
 }
 
 func NewRepos(db *gorm.DB) *Repos {
 	return &Repos{
 		Cars:    NewCarsRepo(db),
 		Details: NewDetailsRepo(db),
+		Users:   NewUsersRepo(db),
 	}
 }
