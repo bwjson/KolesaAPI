@@ -27,6 +27,8 @@ func NewHandler(services *service.Services, repo *repository.Repos, s3 *pkg.S3Cl
 func (h *Handler) InitRoutes() *gin.Engine {
 	r := gin.Default()
 
+	r.Use(PrometheusMiddleware())
+
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:3001", "https://car-market-zeta.vercel.app"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
