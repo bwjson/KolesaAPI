@@ -51,6 +51,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		})
 	})
 
+	r.GET("/panic", func(c *gin.Context) {
+		panic("simulated panic")
+	})
+
 	cars := r.Group("/api/cars")
 	{
 		cars.POST("/create", h.Create)

@@ -3,6 +3,7 @@ package transport
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
+	"net/http"
 	"strconv"
 )
 
@@ -20,20 +21,22 @@ func init() {
 
 func PrometheusMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Next()
-
-		status := strconv.Itoa(c.Writer.Status())
 		path := c.FullPath()
 		if path == "" {
 			path = c.Request.URL.Path
 		}
-
 		method := c.Request.Method
 
-		if path == "" {
-			path = "unknown"
-		}
+		defer func() {
+			if r := recover(); r != nil {
+				// Можно залогировать: log.Printf("panic recovered: %v", r)
+				c.AbortWithStatus(http.StatusInternalServerError)
+			}
 
-		httpRequestsTotal.WithLabelValues(path, method, status).Inc()
+			status := strconv.Itoa(c.Writer.Status())
+			httpRequestsTotal.WithLabelValues(path, method, status).Inc()
+		}()
+
+		c.Next()
 	}
 }
