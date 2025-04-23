@@ -27,6 +27,8 @@ func NewHandler(services *service.Services, repo *repository.Repos, s3 *pkg.S3Cl
 func (h *Handler) InitRoutes() *gin.Engine {
 	r := gin.Default()
 
+	r.Use(gin.Recovery())
+
 	r.Use(PrometheusMiddleware())
 
 	r.Use(cors.New(cors.Config{

@@ -23,7 +23,11 @@ func PrometheusMiddleware() gin.HandlerFunc {
 		c.Next()
 
 		status := strconv.Itoa(c.Writer.Status())
-		path := c.FullPath() // или c.Request.URL.Path, если FullPath пуст
+		path := c.FullPath()
+		if path == "" {
+			path = c.Request.URL.Path
+		}
+
 		method := c.Request.Method
 
 		if path == "" {
