@@ -2,10 +2,11 @@ package grpc
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	ssov1 "github.com/bwjson/kolesa_proto/gen/go/sso"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/credentials"
 	"log/slog"
 	"time"
 )
@@ -16,7 +17,8 @@ type Client struct {
 }
 
 func New(ctx context.Context, log *slog.Logger, addr string, timeout time.Duration, retriesCount int) (*Client, error) {
-	cc, err := grpc.DialContext(ctx, addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	log.Info(addr)
+	cc, err := grpc.DialContext(ctx, addr, grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})))
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
 	}
@@ -46,4 +48,16 @@ func (c *Client) VerifyCode(phoneNumber, code string) (accessToken, refreshToken
 	}
 
 	return tokens.AccessToken, tokens.RefreshToken, nil
+}
+
+func (c *Client) RefreshAccessToken(refreshToken string) (accessToken string, err error) {
+	token, err := c.api.RefreshAccessToken(context.Background(), &ssov1.RefreshAccessTokenRequest{
+		RefreshToken: refreshToken,
+	})
+
+	if err != nil {
+		return "", fmt.Errorf("%w", err)
+	}
+
+	return token.AccessToken, nil
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/bwjson/kolesa_api/pkg"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
 	"net/http"
@@ -34,7 +35,11 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		AllowCredentials: true,
 	}))
 
+	gin.SetMode(gin.ReleaseMode)
+
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -77,10 +82,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	users := r.Group("/api/users")
 	{
-		users.POST("/", h.CreateUser)
-		users.GET("/", h.GetUsers)
+		users.POST("/create", h.CreateUser)
+		users.GET("/get_all", h.GetUsers)
 		users.GET("/:id", h.GetUserByID)
-		users.PUT("/", h.UpdateUser)
+		users.PUT("/:id", h.UpdateUser)
 		users.DELETE("/:id", h.DeleteUser)
 	}
 

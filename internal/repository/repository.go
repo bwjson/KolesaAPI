@@ -24,15 +24,15 @@ type Details interface {
 	GetAllBodies(ctx context.Context) ([]dto.Body, error)
 	GetAllColors(ctx context.Context) ([]dto.Color, error)
 	GetSourceById(ctx context.Context, carId int) (string, error)
-
 	AddSourceUrl(ctx context.Context, photo dto.CarPhoto) error
 }
 
 type Users interface {
-	Create(ctx context.Context, user dto.User) error
+	Create(ctx context.Context, user dto.User) (int, error)
 	GetAll(ctx context.Context) ([]dto.User, error)
 	GetByID(ctx context.Context, id int) (dto.User, error)
-	Update(ctx context.Context, user dto.User) error
+	GetByPhoneNumber(ctx context.Context, phoneNumber string) (*dto.User, error)
+	Update(ctx context.Context, id int, user dto.User) error
 	Delete(ctx context.Context, id int) error
 }
 

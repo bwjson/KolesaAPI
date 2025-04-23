@@ -19,3 +19,5 @@
 *.sql~
 pgdata/
 dump.sql
+
+docker-compose.yml

@@ -13,6 +13,7 @@ type Config struct {
 	HttpSrv HttpSrv
 	GRPC    GRPC
 	S3      S3
+	JWT     JWT
 }
 
 type HttpSrv struct {
@@ -25,6 +26,10 @@ type GRPC struct {
 	Address      string        `env:"GRPC_ADDRESS"`
 	Timeout      time.Duration `env:"GRPC_TIMEOUT"`
 	RetriesCount int           `env:"GRPC_RETRIES_COUNT"`
+}
+
+type JWT struct {
+	JWTSecret string `env:"JWT_SECRET"`
 }
 
 type Db struct {
@@ -76,6 +81,8 @@ func LoadConfig() *Config {
 	cfg.GRPC.Address = os.Getenv("GRPC_ADDRESS")
 	cfg.GRPC.Timeout, _ = time.ParseDuration(os.Getenv("GRPC_TIMEOUT"))
 	cfg.GRPC.RetriesCount, _ = strconv.Atoi(os.Getenv("GRPC_RETRIES_COUNT"))
+
+	cfg.JWT.JWTSecret = os.Getenv("JWT_SECRET")
 
 	return &cfg
 }

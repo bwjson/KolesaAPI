@@ -1,6 +1,7 @@
 package transport
 
 import (
+	"fmt"
 	"github.com/bwjson/kolesa_api/internal/dto"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -14,13 +15,13 @@ func (h *Handler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	err := h.repos.Users.Create(c.Request.Context(), user)
+	id, err := h.repos.Users.Create(c.Request.Context(), user)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusCreated, "User created", nil)
+	NewSuccessResponse(c, http.StatusCreated, "User created", id)
 }
 
 func (h *Handler) GetUsers(c *gin.Context) {
@@ -51,24 +52,37 @@ func (h *Handler) GetUserByID(c *gin.Context) {
 
 func (h *Handler) UpdateUser(c *gin.Context) {
 	var user dto.User
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid user id param")
+		return
+	}
+
 	if err := c.ShouldBindJSON(&user); err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid input")
 		return
 	}
 
-	err := h.repos.Users.Update(c.Request.Context(), user)
+	err = h.repos.Users.Update(c.Request.Context(), id, user)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "User updated", nil)
+	NewSuccessResponse(c, http.StatusOK, "User updated", id)
 }
 
 func (h *Handler) DeleteUser(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid user id")
+		return
+	}
+
+	_, err = h.repos.Users.GetByID(c.Request.Context(), id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusNotFound, fmt.Sprintf("There is no car with ID: %d", id))
 		return
 	}
 
