@@ -44,3 +44,12 @@ func (s *CarsService) UpdateById(ctx context.Context, id int, car dto.Car) error
 func (s *CarsService) DeleteById(ctx context.Context, id int) error {
 	return s.repo.DeleteById(ctx, id)
 }
+
+func (s *CarsService) SearchCars(ctx context.Context, query string, limit, offset int) ([]dto.Car, int64, error) {
+	credentials, err := s.s3.GetS3Credentials()
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return s.repo.SearchCars(ctx, query, credentials.AuthToken, limit, offset)
+}

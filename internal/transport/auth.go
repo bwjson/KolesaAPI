@@ -36,7 +36,7 @@ func (h *Handler) RequestCode(c *gin.Context) {
 
 	data := map[string]interface{}{}
 
-	NewSuccessResponse(c, http.StatusOK, "Successfully sent the message", data)
+	NewSuccessResponse(c, http.StatusOK, data)
 }
 
 func (h *Handler) VerifyCode(c *gin.Context) {
@@ -75,7 +75,7 @@ func (h *Handler) VerifyCode(c *gin.Context) {
 		}
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Success", tokens)
+	NewSuccessResponse(c, http.StatusOK, tokens)
 }
 
 func (h *Handler) RefreshAccessToken(c *gin.Context) {
@@ -92,7 +92,7 @@ func (h *Handler) RefreshAccessToken(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Token refreshed", accessToken)
+	NewSuccessResponse(c, http.StatusOK, accessToken)
 }
 
 //func (h *Handler) AuthMiddleware(c *gin.Context) {

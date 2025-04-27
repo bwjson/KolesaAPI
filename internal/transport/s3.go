@@ -35,7 +35,7 @@ func (h *Handler) GetAuthToken(c *gin.Context) {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Authorization token", authResponse.AuthToken)
+	NewSuccessResponse(c, http.StatusOK, authResponse.AuthToken)
 }
 
 func (h *Handler) UploadFile(c *gin.Context) {
@@ -60,5 +60,5 @@ func (h *Handler) UploadFile(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Successfully uploaded file:", url)
+	NewSuccessResponse(c, http.StatusOK, url)
 }

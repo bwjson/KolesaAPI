@@ -14,6 +14,7 @@ type Cars interface {
 	GetAll(ctx context.Context, filters map[string]interface{}) ([]dto.Car, int64, error) // second param is total_count
 	UpdateById(ctx context.Context, id int, good dto.Car) error
 	DeleteById(ctx context.Context, id int) error
+	SearchCars(ctx context.Context, query string, limit, offset int) ([]dto.Car, int64, error)
 }
 
 type Services struct {

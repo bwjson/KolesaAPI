@@ -69,7 +69,7 @@ func (h *Handler) GetAllCarsExtended(c *gin.Context) {
 		"total_count": total_count,
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Successfully returned all the cars", data)
+	NewSuccessResponse(c, http.StatusOK, data)
 }
 
 // @Summary      Main page cars
@@ -179,7 +179,7 @@ func (h *Handler) GetAllCars(c *gin.Context) {
 		"total_count": total_count,
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Successfully returned all the cars", data)
+	NewSuccessResponse(c, http.StatusOK, data)
 }
 
 // @Summary      Get info about car
@@ -208,7 +208,7 @@ func (h *Handler) GetCarById(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Successfully returned a car", car)
+	NewSuccessResponse(c, http.StatusOK, car)
 }
 
 func (h *Handler) UpdateById(c *gin.Context) {}
@@ -222,10 +222,28 @@ func (h *Handler) SearchCars(c *gin.Context) {
 
 	query := c.Query("q")
 
-	cars, err := h.repos.Cars.SearchCars(ctx, query)
+	// pagination
+	limit, err := strconv.Atoi(c.DefaultQuery("limit", "9"))
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid limit param")
+		return
+	}
+
+	offset, err := strconv.Atoi(c.DefaultQuery("offset", "0"))
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid offset param")
+		return
+	}
+
+	cars, totalCount, err := h.services.Cars.SearchCars(ctx, query, limit, offset)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Successfully returned all the cars", cars)
+	data := map[string]interface{}{
+		"cars":        cars,
+		"total_count": totalCount,
+	}
+
+	NewSuccessResponse(c, http.StatusOK, data)
 }

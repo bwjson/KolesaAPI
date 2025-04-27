@@ -27,6 +27,8 @@ func NewHandler(log *slog.Logger, services *service.Services, repo *repository.R
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
+	gin.SetMode(gin.ReleaseMode)
+
 	r := gin.Default()
 
 	r.Use(gin.Recovery())
@@ -40,8 +42,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 	}))
-
-	gin.SetMode(gin.ReleaseMode)
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

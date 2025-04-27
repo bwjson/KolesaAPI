@@ -19,7 +19,7 @@ func (h *Handler) GetAllCities(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Successfully got the cities", cities)
+	NewSuccessResponse(c, http.StatusOK, cities)
 }
 
 // @Summary      Get all brands
@@ -37,7 +37,7 @@ func (h *Handler) GetAllBrands(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Successfully got the brands", brands)
+	NewSuccessResponse(c, http.StatusOK, brands)
 }
 
 // @Summary      Get all models
@@ -56,7 +56,7 @@ func (h *Handler) GetAllModels(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Successfully got the models", models)
+	NewSuccessResponse(c, http.StatusOK, models)
 }
 
 // @Summary      Get all generations
@@ -75,7 +75,7 @@ func (h *Handler) GetAllGenerations(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Successfully got the generations", generations)
+	NewSuccessResponse(c, http.StatusOK, generations)
 }
 
 // @Summary      Get all categories
@@ -92,7 +92,7 @@ func (h *Handler) GetAllCategories(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Successfully got the categories", categories)
+	NewSuccessResponse(c, http.StatusOK, categories)
 }
 
 // @Summary      Get all bodies
@@ -109,7 +109,7 @@ func (h *Handler) GetAllBodies(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Successfully got the bodies", bodies)
+	NewSuccessResponse(c, http.StatusOK, bodies)
 }
 
 // @Summary      Get all colors
@@ -126,5 +126,5 @@ func (h *Handler) GetAllColors(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Successfully got the generations", colors)
+	NewSuccessResponse(c, http.StatusOK, colors)
 }

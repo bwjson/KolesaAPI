@@ -21,7 +21,7 @@ func (h *Handler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusCreated, "User created", id)
+	NewSuccessResponse(c, http.StatusCreated, id)
 }
 
 func (h *Handler) GetUsers(c *gin.Context) {
@@ -31,7 +31,7 @@ func (h *Handler) GetUsers(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "Users retrieved", users)
+	NewSuccessResponse(c, http.StatusOK, users)
 }
 
 func (h *Handler) GetUserByID(c *gin.Context) {
@@ -47,7 +47,7 @@ func (h *Handler) GetUserByID(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "User retrieved", user)
+	NewSuccessResponse(c, http.StatusOK, user)
 }
 
 func (h *Handler) UpdateUser(c *gin.Context) {
@@ -70,7 +70,7 @@ func (h *Handler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "User updated", id)
+	NewSuccessResponse(c, http.StatusOK, id)
 }
 
 func (h *Handler) DeleteUser(c *gin.Context) {
@@ -92,5 +92,5 @@ func (h *Handler) DeleteUser(c *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(c, http.StatusOK, "User deleted", nil)
+	NewSuccessResponse(c, http.StatusOK, nil)
 }

@@ -13,7 +13,7 @@ type Cars interface {
 	GetCarById(ctx context.Context, id int) (dto.Car, error)
 	UpdateById(ctx context.Context, id int, car dto.Car) error
 	DeleteById(ctx context.Context, id int) error
-	SearchCars(ctx context.Context, query string) ([]dto.Car, error)
+	SearchCars(ctx context.Context, query, authToken string, limit, offset int) ([]dto.Car, int64, error)
 }
 
 type Details interface {

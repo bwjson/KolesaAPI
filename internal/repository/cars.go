@@ -18,33 +18,60 @@ func NewCarsRepo(db *gorm.DB) *CarsRepo {
 	return &CarsRepo{db: db}
 }
 
-func (r *CarsRepo) SearchCars(ctx context.Context, query string) ([]dto.Car, error) {
+func (r *CarsRepo) SearchCars(ctx context.Context, query, authToken string, limit, offset int) ([]dto.Car, int64, error) {
 	var cars []dto.Car
+	var totalCount int64
 
-	searchVector := `
-		to_tsvector('simple',
-			coalesce(price, '') || ' ' ||
-			coalesce(engine_volume, '') || ' ' ||
-			coalesce(mileage, '') || ' ' ||
-			coalesce(description, '') || ' ' ||
-			coalesce(steering_wheel, '') || ' ' ||
-			coalesce(wheel_drive, '')
+	sql_query := `
+		to_tsvector('simple', coalesce(cars.description, '') || ' ' || 
+			coalesce(brands.name, '') || ' ' ||
+			coalesce(models.name, '') || ' ' ||
+			coalesce(categories.name, '') || ' ' ||
+			coalesce(generations.name, '') || ' ' ||
+			coalesce(cities.name, '') || ' ' ||
+			coalesce(colors.name, '') || ' ' ||
+			coalesce(bodies.name, '')
 		) @@ plainto_tsquery('simple', ?)
 	`
 
-	log.Println(searchVector)
+	base_query := r.db.Model(&dto.Car{}).
+		Joins("LEFT JOIN brands ON brands.id = cars.brand_id").
+		Joins("LEFT JOIN models ON models.id = cars.model_id").
+		Joins("LEFT JOIN categories ON categories.id = cars.category_id").
+		Joins("LEFT JOIN generations ON generations.id = cars.generation_id").
+		Joins("LEFT JOIN cities ON cities.id = cars.city_id").
+		Joins("LEFT JOIN colors ON colors.id = cars.color_id").
+		Joins("LEFT JOIN bodies ON bodies.id = cars.body_id").
+		Where(sql_query, query).
+		Preload("Brand").
+		Preload("Model").
+		Preload("Category").
+		Preload("Generation").
+		Preload("City").
+		Preload("Color").
+		Preload("Body")
 
-	res := r.db.
-		WithContext(ctx).
-		Model(dto.Car{}).
-		Find(&cars)
-
-	log.Println(query)
-
-	if res.Error != nil {
-		return nil, res.Error
+	err := base_query.Count(&totalCount).Error
+	if err != nil {
+		return nil, 0, errors.New("Could not calculate the totalCount param")
 	}
-	return cars, nil
+
+	// Offset means pages not elements
+	offset *= limit
+
+	log.Println(offset)
+
+	err = base_query.Limit(limit).Offset(offset).Find(&cars).Error
+	if err != nil {
+		return nil, 0, errors.New("Could not get the data")
+	}
+
+	// Authorization token
+	for i := range cars {
+		cars[i].AvatarSource += "?Authorization=" + authToken
+	}
+
+	return cars, totalCount, nil
 }
 
 func (r *CarsRepo) Create(ctx context.Context, good dto.Car) (int, error) {
@@ -163,8 +190,6 @@ func (r *CarsRepo) GetAllCars(ctx context.Context, filters map[string]interface{
 	if err != nil {
 		return nil, 0, errors.New("Failed to count cars")
 	}
-
-	log.Println(totalCount, offset)
 
 	// Pagination
 	if v, ok := filters["limit"].(int); ok {
