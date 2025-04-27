@@ -18,6 +18,35 @@ func NewCarsRepo(db *gorm.DB) *CarsRepo {
 	return &CarsRepo{db: db}
 }
 
+func (r *CarsRepo) SearchCars(ctx context.Context, query string) ([]dto.Car, error) {
+	var cars []dto.Car
+
+	searchVector := `
+		to_tsvector('simple',
+			coalesce(price, '') || ' ' ||
+			coalesce(engine_volume, '') || ' ' ||
+			coalesce(mileage, '') || ' ' ||
+			coalesce(description, '') || ' ' ||
+			coalesce(steering_wheel, '') || ' ' ||
+			coalesce(wheel_drive, '')
+		) @@ plainto_tsquery('simple', ?)
+	`
+
+	log.Println(searchVector)
+
+	res := r.db.
+		WithContext(ctx).
+		Model(dto.Car{}).
+		Find(&cars)
+
+	log.Println(query)
+
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return cars, nil
+}
+
 func (r *CarsRepo) Create(ctx context.Context, good dto.Car) (int, error) {
 	//var id int
 	//

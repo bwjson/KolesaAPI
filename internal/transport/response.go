@@ -9,8 +9,7 @@ type errorResponse struct {
 }
 
 type successResponse struct {
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
+	Data interface{} `json:"data"`
 }
 
 type statusResponse struct {
@@ -18,7 +17,7 @@ type statusResponse struct {
 }
 
 func NewSuccessResponse(c *gin.Context, statusCode int, message string, data interface{}) {
-	c.AbortWithStatusJSON(statusCode, successResponse{message, data})
+	c.AbortWithStatusJSON(statusCode, successResponse{data})
 }
 
 func NewErrorResponse(c *gin.Context, statusCode int, message string) {

@@ -50,7 +50,7 @@ func main() {
 
 	services := service.NewServices(repo, s3)
 
-	h := transport.NewHandler(services, repo, s3, gRPC)
+	h := transport.NewHandler(log, services, repo, s3, gRPC)
 
 	s := internal.NewServer(*cfg, h.InitRoutes())
 

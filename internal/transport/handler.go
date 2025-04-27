@@ -10,18 +10,20 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
+	"log/slog"
 	"net/http"
 )
 
 type Handler struct {
+	log      *slog.Logger
 	services *service.Services
 	repos    *repository.Repos
 	s3       *pkg.S3Client
 	gRPC     *grpc.Client
 }
 
-func NewHandler(services *service.Services, repo *repository.Repos, s3 *pkg.S3Client, gRPC *grpc.Client) *Handler {
-	return &Handler{services: services, repos: repo, s3: s3, gRPC: gRPC}
+func NewHandler(log *slog.Logger, services *service.Services, repo *repository.Repos, s3 *pkg.S3Client, gRPC *grpc.Client) *Handler {
+	return &Handler{log: log, services: services, repos: repo, s3: s3, gRPC: gRPC}
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
@@ -51,10 +53,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		})
 	})
 
-	r.GET("/panic", func(c *gin.Context) {
-		panic("simulated panic")
-	})
-
 	cars := r.Group("/api/cars")
 	{
 		cars.POST("/create", h.Create)
@@ -62,6 +60,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		cars.GET("/extended", h.GetAllCarsExtended)
 		cars.GET("/:id", h.GetCarById)
 		cars.PATCH("/:id", h.UpdateById)
+		cars.GET("/search", h.SearchCars)
 	}
 
 	details := r.Group("/api/details")

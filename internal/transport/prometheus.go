@@ -29,7 +29,6 @@ func PrometheusMiddleware() gin.HandlerFunc {
 
 		defer func() {
 			if r := recover(); r != nil {
-				// Можно залогировать: log.Printf("panic recovered: %v", r)
 				c.AbortWithStatus(http.StatusInternalServerError)
 			}
 

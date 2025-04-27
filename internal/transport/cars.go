@@ -215,6 +215,17 @@ func (h *Handler) UpdateById(c *gin.Context) {}
 
 func (h *Handler) DeleteById(c *gin.Context) {}
 
-func (h *Handler) Create(c *gin.Context) {
+func (h *Handler) Create(c *gin.Context) {}
 
+func (h *Handler) SearchCars(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	query := c.Query("q")
+
+	cars, err := h.repos.Cars.SearchCars(ctx, query)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+	}
+
+	NewSuccessResponse(c, http.StatusOK, "Successfully returned all the cars", cars)
 }
