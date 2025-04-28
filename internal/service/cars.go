@@ -4,15 +4,15 @@ import (
 	"context"
 	"github.com/bwjson/kolesa_api/internal/dto"
 	"github.com/bwjson/kolesa_api/internal/repository"
-	"github.com/bwjson/kolesa_api/pkg"
+	"github.com/bwjson/kolesa_api/pkg/s3"
 )
 
 type CarsService struct {
 	repo repository.Cars
-	s3   *pkg.S3Client
+	s3   *s3.S3Client
 }
 
-func NewCarsService(repo repository.Cars, s3 *pkg.S3Client) *CarsService {
+func NewCarsService(repo repository.Cars, s3 *s3.S3Client) *CarsService {
 	return &CarsService{repo: repo, s3: s3}
 }
 

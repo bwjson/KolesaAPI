@@ -55,8 +55,8 @@ func (h *Handler) VerifyCode(c *gin.Context) {
 	}
 
 	tokens := map[string]interface{}{
-		"accessToken":  accessToken,
-		"refreshToken": refreshToken,
+		"access_token":  accessToken,
+		"refresh_token": refreshToken,
 	}
 
 	newUser := dto.User{

@@ -9,7 +9,6 @@ import (
 	"time"
 )
 
-// Nats jetstream settings.
 const (
 	maxWaitFetch = 3 * time.Second
 	maxPending   = 256

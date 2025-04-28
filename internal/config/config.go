@@ -14,6 +14,7 @@ type Config struct {
 	GRPC    GRPC
 	S3      S3
 	JWT     JWT
+	Nats    Nats
 }
 
 type HttpSrv struct {
@@ -51,6 +52,17 @@ type S3 struct {
 	UploadUrl   string `env:"S3_UPLOAD_URL"`
 }
 
+type Nats struct {
+	Hosts        []string `env:"NATS_HOSTS,notEmpty" envSeparator:","`
+	NKey         string   `env:"NATS_NKEY,notEmpty"`
+	IsTest       bool     `env:"NATS_IS_TEST,notEmpty" envDefault:"true"`
+	NatsSubjects NatsSubjects
+}
+
+type NatsSubjects struct {
+	ClientEventSubject string `env:"NATS_CLIENT_EVENT_SUBJECT,notEmpty"`
+}
+
 func LoadConfig() *Config {
 	// Not used in production, only development
 	godotenv.Load()
@@ -83,6 +95,11 @@ func LoadConfig() *Config {
 	cfg.GRPC.RetriesCount, _ = strconv.Atoi(os.Getenv("GRPC_RETRIES_COUNT"))
 
 	cfg.JWT.JWTSecret = os.Getenv("JWT_SECRET")
+
+	//cfg.Nats.Hosts = strings.Split(os.Getenv("NATS_HOSTS"), ",")
+	//cfg.Nats.NKey = os.Getenv("NATS_NKEY")
+	//cfg.Nats.IsTest, _ = strconv.ParseBool(os.Getenv("NATS_IS_TEST"))
+	//cfg.Nats.NatsSubjects = NatsSubjects{}
 
 	return &cfg
 }

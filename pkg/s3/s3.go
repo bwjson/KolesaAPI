@@ -1,4 +1,4 @@
-package pkg
+package s3
 
 import (
 	"bytes"

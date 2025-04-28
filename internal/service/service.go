@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/bwjson/kolesa_api/internal/dto"
 	"github.com/bwjson/kolesa_api/internal/repository"
-	"github.com/bwjson/kolesa_api/pkg"
+	"github.com/bwjson/kolesa_api/pkg/s3"
 )
 
 type Cars interface {
@@ -19,10 +19,10 @@ type Cars interface {
 
 type Services struct {
 	Cars Cars
-	S3   *pkg.S3Client
+	S3   *s3.S3Client
 }
 
-func NewServices(repos *repository.Repos, s3 *pkg.S3Client) *Services {
+func NewServices(repos *repository.Repos, s3 *s3.S3Client) *Services {
 	return &Services{
 		Cars: NewCarsService(repos.Cars, s3),
 	}
