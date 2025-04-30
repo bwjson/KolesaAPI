@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
-	"github.com/bwjson/kolesa_api/internal/dto"
+	"github.com/bwjson/kolesa_api/internal/models"
 	"gorm.io/gorm"
 )
 
@@ -15,8 +15,8 @@ func NewDetailsRepo(db *gorm.DB) *DetailsRepo {
 	return &DetailsRepo{db: db}
 }
 
-func (r *DetailsRepo) GetAllCities(ctx context.Context) ([]dto.City, error) {
-	var cities []dto.City
+func (r *DetailsRepo) GetAllCities(ctx context.Context) ([]models.City, error) {
+	var cities []models.City
 
 	res := r.db.WithContext(ctx).Find(&cities)
 
@@ -27,8 +27,8 @@ func (r *DetailsRepo) GetAllCities(ctx context.Context) ([]dto.City, error) {
 	return cities, nil
 }
 
-func (r *DetailsRepo) GetAllBrands(ctx context.Context) ([]dto.Brand, error) {
-	var brands []dto.Brand
+func (r *DetailsRepo) GetAllBrands(ctx context.Context) ([]models.Brand, error) {
+	var brands []models.Brand
 
 	res := r.db.WithContext(ctx).Find(&brands)
 
@@ -39,8 +39,8 @@ func (r *DetailsRepo) GetAllBrands(ctx context.Context) ([]dto.Brand, error) {
 	return brands, nil
 }
 
-func (r *DetailsRepo) GetAllModels(ctx context.Context, brandSource string) ([]dto.Model, error) {
-	var models []dto.Model
+func (r *DetailsRepo) GetAllModels(ctx context.Context, brandSource string) ([]models.Model, error) {
+	var models []models.Model
 
 	query := r.db.WithContext(ctx).Model(&models)
 
@@ -57,8 +57,8 @@ func (r *DetailsRepo) GetAllModels(ctx context.Context, brandSource string) ([]d
 	return models, nil
 }
 
-func (r *DetailsRepo) GetAllGenerations(ctx context.Context, modelSource string) ([]dto.Generation, error) {
-	var generations []dto.Generation
+func (r *DetailsRepo) GetAllGenerations(ctx context.Context, modelSource string) ([]models.Generation, error) {
+	var generations []models.Generation
 
 	query := r.db.WithContext(ctx).Model(&generations)
 
@@ -75,8 +75,8 @@ func (r *DetailsRepo) GetAllGenerations(ctx context.Context, modelSource string)
 	return generations, nil
 }
 
-func (r *DetailsRepo) GetAllCategories(ctx context.Context) ([]dto.Category, error) {
-	var categories []dto.Category
+func (r *DetailsRepo) GetAllCategories(ctx context.Context) ([]models.Category, error) {
+	var categories []models.Category
 
 	res := r.db.WithContext(ctx).Find(&categories)
 
@@ -87,8 +87,8 @@ func (r *DetailsRepo) GetAllCategories(ctx context.Context) ([]dto.Category, err
 	return categories, nil
 }
 
-func (r *DetailsRepo) GetAllBodies(ctx context.Context) ([]dto.Body, error) {
-	var bodies []dto.Body
+func (r *DetailsRepo) GetAllBodies(ctx context.Context) ([]models.Body, error) {
+	var bodies []models.Body
 
 	res := r.db.WithContext(ctx).Find(&bodies)
 
@@ -99,8 +99,8 @@ func (r *DetailsRepo) GetAllBodies(ctx context.Context) ([]dto.Body, error) {
 	return bodies, nil
 }
 
-func (r *DetailsRepo) GetAllColors(ctx context.Context) ([]dto.Color, error) {
-	var colors []dto.Color
+func (r *DetailsRepo) GetAllColors(ctx context.Context) ([]models.Color, error) {
+	var colors []models.Color
 
 	res := r.db.WithContext(ctx).Find(&colors)
 
@@ -112,7 +112,7 @@ func (r *DetailsRepo) GetAllColors(ctx context.Context) ([]dto.Color, error) {
 }
 
 func (r *DetailsRepo) GetSourceById(ctx context.Context, carId int) (string, error) {
-	var carPhoto dto.CarPhoto
+	var carPhoto models.CarPhoto
 
 	res := r.db.WithContext(ctx).Find(&carPhoto, "car_id = ?", carId)
 
@@ -123,7 +123,7 @@ func (r *DetailsRepo) GetSourceById(ctx context.Context, carId int) (string, err
 	return carPhoto.PhotoUrl, nil
 }
 
-func (r *DetailsRepo) AddSourceUrl(ctx context.Context, photo dto.CarPhoto) error {
+func (r *DetailsRepo) AddSourceUrl(ctx context.Context, photo models.CarPhoto) error {
 	res := r.db.WithContext(ctx).Create(&photo)
 
 	if res.Error != nil {
@@ -133,8 +133,8 @@ func (r *DetailsRepo) AddSourceUrl(ctx context.Context, photo dto.CarPhoto) erro
 	return nil
 }
 
-func (r *DetailsRepo) GetModelsByBrand(ctx context.Context, brand string) ([]dto.Model, error) {
-	var models []dto.Model
+func (r *DetailsRepo) GetModelsByBrand(ctx context.Context, brand string) ([]models.Model, error) {
+	var models []models.Model
 
 	res := r.db.WithContext(ctx).Find(&models, "brand = ?", brand)
 

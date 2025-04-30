@@ -1,6 +1,7 @@
-package transport
+package handler
 
 import (
+	"github.com/bwjson/kolesa_api/internal/adapter/http/handler/metrics"
 	"github.com/bwjson/kolesa_api/internal/grpc"
 	"github.com/bwjson/kolesa_api/internal/repository"
 	"github.com/bwjson/kolesa_api/internal/service"
@@ -33,17 +34,21 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	r.Use(gin.Recovery())
 
-	r.Use(PrometheusMiddleware())
+	r.Use(metrics.PrometheusMiddleware())
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:3001", "https://car-market-zeta.vercel.app"},
+		AllowOrigins: []string{
+			"http://localhost:3000",
+			"https://car-market-zeta.vercel.app"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 	}))
 
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler,
+		ginSwagger.URL("http://localhost:8000/swagger/doc.json"),
+	))
 
 	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
@@ -57,7 +62,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		cars.POST("/create", h.Create)
 		cars.GET("/main", h.GetAllCars)
-		cars.GET("/extended", h.GetAllCarsExtended)
 		cars.GET("/:id", h.GetCarById)
 		cars.PATCH("/:id", h.UpdateById)
 		cars.GET("/search", h.SearchCars)

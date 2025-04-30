@@ -1,4 +1,4 @@
-package dto
+package models
 
 import "time"
 
@@ -28,9 +28,8 @@ type Car struct {
 	Mileage          string `json:"mileage,omitempty"`
 	CustomsClearance bool   `json:"customs_clearance,omitempty"`
 	Description      string `json:"description,omitempty"`
-	// May be relationship?
-	SteeringWheel string `json:"steering_wheel,omitempty"` // Left/Right
-	WheelDrive    string `json:"wheel_drive,omitempty"`    // FWD/RWD/AWD
+	SteeringWheel    string `json:"steering_wheel,omitempty"` // Left/Right
+	WheelDrive       string `json:"wheel_drive,omitempty"`    // FWD/RWD/AWD
 	// Avatar url
 	AvatarSource string `json:"avatar_source,omitempty"`
 	// Time params

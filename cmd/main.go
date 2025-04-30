@@ -4,13 +4,13 @@ import (
 	"context"
 	"fmt"
 	_ "github.com/bwjson/kolesa_api/docs"
-	"github.com/bwjson/kolesa_api/internal"
+	"github.com/bwjson/kolesa_api/internal/adapter/http"
+	"github.com/bwjson/kolesa_api/internal/adapter/http/handler"
 	"github.com/bwjson/kolesa_api/internal/config"
 	"github.com/bwjson/kolesa_api/internal/grpc"
-	"github.com/bwjson/kolesa_api/internal/postgres"
 	"github.com/bwjson/kolesa_api/internal/repository"
 	"github.com/bwjson/kolesa_api/internal/service"
-	"github.com/bwjson/kolesa_api/internal/transport"
+	"github.com/bwjson/kolesa_api/pkg/postgres"
 	"github.com/bwjson/kolesa_api/pkg/s3"
 	_ "github.com/lib/pq"
 	"log/slog"
@@ -19,10 +19,10 @@ import (
 	"syscall"
 )
 
-// @title           Kolesa API
+// @title           Auto.Hunt
 // @version         1.0
 // @description     This is a sample server celler server.
-// @host      kolesaapi.onrender.com
+// @host      localhost:8000
 // @BasePath  /api
 func main() {
 	ctx := context.Background()
@@ -46,15 +46,13 @@ func main() {
 
 	gRPC, err := grpc.New(ctx, log, cfg.GRPC.Address, cfg.GRPC.Timeout, cfg.GRPC.RetriesCount)
 
-	//nc, err := nats.New(ctx)
-
 	repo := repository.NewRepos(db)
 
 	services := service.NewServices(repo, s3)
 
-	h := transport.NewHandler(log, services, repo, s3, gRPC)
+	h := handler.NewHandler(log, services, repo, s3, gRPC)
 
-	s := internal.NewServer(*cfg, h.InitRoutes())
+	s := http.NewServer(*cfg, h.InitRoutes())
 
 	go func() {
 		err := s.Run()

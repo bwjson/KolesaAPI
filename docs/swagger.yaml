@@ -1,28 +1,150 @@
 basePath: /api
 definitions:
-  transport.errorResponse:
+  handler.CodeRequest:
+    properties:
+      phone_number:
+        type: string
+    type: object
+  handler.RefreshRequest:
+    properties:
+      refresh_token:
+        type: string
+    type: object
+  handler.VerifyRequest:
+    properties:
+      code:
+        type: string
+      phone_number:
+        type: string
+    type: object
+  models.User:
+    properties:
+      bank_card:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      password_hash:
+        type: string
+      phone_number:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  response.errorResponse:
     properties:
       message:
         type: string
     type: object
-  transport.successResponse:
+  response.successResponse:
     properties:
       data: {}
-      message:
-        type: string
     type: object
-host: kolesaapi.onrender.com
+host: localhost:8000
 info:
   contact: {}
   description: This is a sample server celler server.
-  title: Kolesa API
+  title: Auto.Hunt
   version: "1.0"
 paths:
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Refresh токен
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: access_token
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Некорректный формат запроса
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+        "500":
+          description: Ошибка обновления токена
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+      summary: Refresh access token
+      tags:
+      - auth
+  /auth/request_code:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Номер телефона
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CodeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.successResponse'
+        "400":
+          description: Некорректный формат запроса
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+        "500":
+          description: Ошибка при отправке кода
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+      summary: Send request code to phone number
+      tags:
+      - auth
+  /auth/verify_code:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Номер телефона и код
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.VerifyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: access_token и refresh_token
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Некорректный формат запроса
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+        "500":
+          description: Ошибка верификации или создания пользователя
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+      summary: Verify code
+      tags:
+      - auth
   /cars/{id}:
     get:
       consumes:
       - application/json
-      description: Get info about one car by id
       parameters:
       - description: ID
         in: path
@@ -35,63 +157,26 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/transport.successResponse'
+            $ref: '#/definitions/response.successResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/transport.errorResponse'
+            $ref: '#/definitions/response.errorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/transport.errorResponse'
+            $ref: '#/definitions/response.errorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/transport.errorResponse'
-      summary: Get info about car
-      tags:
-      - cars
-  /cars/extended:
-    get:
-      consumes:
-      - application/json
-      description: Get all cars
-      parameters:
-      - description: Limit param
-        in: query
-        name: limit
-        type: integer
-      - description: Offset param
-        in: query
-        name: offset
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/transport.successResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/transport.errorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/transport.errorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/transport.errorResponse'
-      summary: Get all cars
+            $ref: '#/definitions/response.errorResponse'
+      summary: Get car by ID
       tags:
       - cars
   /cars/main:
     get:
       consumes:
       - application/json
-      description: Get basic info
       parameters:
       - description: Limit param
         in: query
@@ -101,26 +186,125 @@ paths:
         in: query
         name: offset
         type: integer
+      - description: Category filter
+        in: query
+        name: category
+        type: string
+      - description: Brand filter
+        in: query
+        name: brand
+        type: string
+      - description: Model filter
+        in: query
+        name: model
+        type: string
+      - description: Generation filter
+        in: query
+        name: generation
+        type: string
+      - description: City filter
+        in: query
+        name: city
+        type: string
+      - description: Color filter
+        in: query
+        name: color
+        type: string
+      - description: Body type filter
+        in: query
+        name: body
+        type: string
+      - description: Price start filter
+        in: query
+        name: price_start
+        type: integer
+      - description: Price end filter
+        in: query
+        name: price_end
+        type: integer
+      - description: Engine volume start filter
+        in: query
+        name: engine_start
+        type: number
+      - description: Engine volume end filter
+        in: query
+        name: engine_end
+        type: number
+      - description: Mileage start filter
+        in: query
+        name: mileage_start
+        type: integer
+      - description: Mileage end filter
+        in: query
+        name: mileage_end
+        type: integer
+      - description: Steering wheel side filter
+        in: query
+        name: steering_wheel
+        type: string
+      - description: Wheel drive filter
+        in: query
+        name: wheel_drive
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/transport.successResponse'
+            $ref: '#/definitions/response.successResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/transport.errorResponse'
+            $ref: '#/definitions/response.errorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/transport.errorResponse'
+            $ref: '#/definitions/response.errorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/transport.errorResponse'
-      summary: Main page cars
+            $ref: '#/definitions/response.errorResponse'
+      summary: Get all cars
+      tags:
+      - cars
+  /cars/search:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Limit param
+        in: query
+        name: limit
+        type: integer
+      - description: Offset param
+        in: query
+        name: offset
+        type: integer
+      - description: Search query
+        in: query
+        name: q
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.successResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+      summary: Search cars
       tags:
       - cars
   /details/bodies:
@@ -131,11 +315,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/transport.successResponse'
+            $ref: '#/definitions/response.successResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/transport.errorResponse'
+            $ref: '#/definitions/response.errorResponse'
       summary: Get all bodies
       tags:
       - details
@@ -147,11 +331,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/transport.successResponse'
+            $ref: '#/definitions/response.successResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/transport.errorResponse'
+            $ref: '#/definitions/response.errorResponse'
       summary: Get all brands
       tags:
       - details
@@ -163,11 +347,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/transport.successResponse'
+            $ref: '#/definitions/response.successResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/transport.errorResponse'
+            $ref: '#/definitions/response.errorResponse'
       summary: Get all categories
       tags:
       - details
@@ -179,11 +363,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/transport.successResponse'
+            $ref: '#/definitions/response.successResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/transport.errorResponse'
+            $ref: '#/definitions/response.errorResponse'
       summary: Get all cities
       tags:
       - details
@@ -195,43 +379,53 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/transport.successResponse'
+            $ref: '#/definitions/response.successResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/transport.errorResponse'
+            $ref: '#/definitions/response.errorResponse'
       summary: Get all colors
       tags:
       - details
   /details/generations:
     get:
+      parameters:
+      - description: Model filter
+        in: query
+        name: model
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/transport.successResponse'
+            $ref: '#/definitions/response.successResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/transport.errorResponse'
+            $ref: '#/definitions/response.errorResponse'
       summary: Get all generations
       tags:
       - details
   /details/models:
     get:
+      parameters:
+      - description: Brand filter
+        in: query
+        name: brand
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/transport.successResponse'
+            $ref: '#/definitions/response.successResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/transport.errorResponse'
+            $ref: '#/definitions/response.errorResponse'
       summary: Get all models
       tags:
       - details
@@ -243,12 +437,173 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/transport.successResponse'
+            $ref: '#/definitions/response.successResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/transport.errorResponse'
+            $ref: '#/definitions/response.errorResponse'
       summary: Get S3 auth token
       tags:
       - s3
+  /s3/upload_file:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: File to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.successResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+      summary: Upload file
+      tags:
+      - s3
+  /users/{id}:
+    delete:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.successResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+      summary: Delete user
+      tags:
+      - users
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.successResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+      summary: Get user by ID
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.successResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+      summary: Update user
+      tags:
+      - users
+  /users/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.successResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+      summary: Create user
+      tags:
+      - users
+  /users/get_all:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.successResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.errorResponse'
+      summary: Get all users
+      tags:
+      - users
 swagger: "2.0"

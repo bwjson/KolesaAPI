@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/bwjson/kolesa_api/internal/dto"
+	"github.com/bwjson/kolesa_api/internal/models"
 	_ "github.com/lib/pq"
 	"gorm.io/gorm"
 	"log"
@@ -18,8 +18,8 @@ func NewCarsRepo(db *gorm.DB) *CarsRepo {
 	return &CarsRepo{db: db}
 }
 
-func (r *CarsRepo) SearchCars(ctx context.Context, query, authToken string, limit, offset int) ([]dto.Car, int64, error) {
-	var cars []dto.Car
+func (r *CarsRepo) SearchCars(ctx context.Context, query, authToken string, limit, offset int) ([]models.Car, int64, error) {
+	var cars []models.Car
 	var totalCount int64
 
 	sql_query := `
@@ -34,7 +34,7 @@ func (r *CarsRepo) SearchCars(ctx context.Context, query, authToken string, limi
 		) @@ plainto_tsquery('simple', ?)
 	`
 
-	base_query := r.db.Model(&dto.Car{}).
+	base_query := r.db.Model(&models.Car{}).
 		Joins("LEFT JOIN brands ON brands.id = cars.brand_id").
 		Joins("LEFT JOIN models ON models.id = cars.model_id").
 		Joins("LEFT JOIN categories ON categories.id = cars.category_id").
@@ -74,21 +74,13 @@ func (r *CarsRepo) SearchCars(ctx context.Context, query, authToken string, limi
 	return cars, totalCount, nil
 }
 
-func (r *CarsRepo) Create(ctx context.Context, good dto.Car) (int, error) {
-	//var id int
-	//
-	//err := r.db.QueryRow("INSERT INTO goods (name, description, photo_url, price) VALUES ($1, $2, $3, $4) RETURNING id",
-	//	good.Name, good.Description, good.PhotoUrl, good.Price).Scan(&id)
-	//
-	//if err != nil {
-	//	return 0, err
-	//}
-	//
+func (r *CarsRepo) Create(ctx context.Context, good models.Car) (int, error) {
+
 	return 0, nil
 }
 
-func (r *CarsRepo) GetAllCarsExtended(ctx context.Context, limit, offset int) ([]dto.Car, int, error) {
-	var cars []dto.Car
+func (r *CarsRepo) GetAllCarsExtended(ctx context.Context, limit, offset int) ([]models.Car, int, error) {
+	var cars []models.Car
 
 	res := r.db.WithContext(ctx).
 		Preload("User").
@@ -110,12 +102,12 @@ func (r *CarsRepo) GetAllCarsExtended(ctx context.Context, limit, offset int) ([
 	return cars, int(res.RowsAffected), nil
 }
 
-func (r *CarsRepo) GetAllCars(ctx context.Context, filters map[string]interface{}, authToken string) ([]dto.Car, int64, error) {
-	var cars []dto.Car
+func (r *CarsRepo) GetAllCars(ctx context.Context, filters map[string]interface{}, authToken string) ([]models.Car, int64, error) {
+	var cars []models.Car
 	var totalCount int64
 	var limit, offset int
 
-	baseQuery := r.db.WithContext(ctx).Model(&dto.Car{})
+	baseQuery := r.db.WithContext(ctx).Model(&models.Car{})
 
 	// Filters
 	if v, ok := filters["categorySource"].(string); ok && v != "" {
@@ -221,8 +213,8 @@ func (r *CarsRepo) GetAllCars(ctx context.Context, filters map[string]interface{
 	return cars, totalCount, nil
 }
 
-func (r *CarsRepo) GetCarById(ctx context.Context, id int) (dto.Car, error) {
-	var car dto.Car
+func (r *CarsRepo) GetCarById(ctx context.Context, id int) (models.Car, error) {
+	var car models.Car
 
 	result := r.db.WithContext(ctx).
 		Preload("User").
@@ -234,15 +226,15 @@ func (r *CarsRepo) GetCarById(ctx context.Context, id int) (dto.Car, error) {
 		Preload("City").First(&car, "id = ?", id)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return dto.Car{}, fmt.Errorf("Car with ID = %d not found", id)
+			return models.Car{}, fmt.Errorf("Car with ID = %d not found", id)
 		}
-		return dto.Car{}, fmt.Errorf("Database error: %w", result.Error)
+		return models.Car{}, fmt.Errorf("Database error: %w", result.Error)
 	}
 
 	return car, nil
 }
 
-func (r *CarsRepo) UpdateById(ctx context.Context, id int, good dto.Car) error {
+func (r *CarsRepo) UpdateById(ctx context.Context, id int, good models.Car) error {
 	return nil
 }
 

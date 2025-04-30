@@ -1,4 +1,4 @@
-package transport
+package metrics
 
 import (
 	"github.com/gin-gonic/gin"

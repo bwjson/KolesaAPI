@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"fmt"
-	"github.com/bwjson/kolesa_api/internal/dto"
+	"github.com/bwjson/kolesa_api/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -17,16 +17,16 @@ func NewPostgresDB(user string, name string, port string, password string, host 
 	}
 
 	err = db.AutoMigrate(
-		&dto.User{},
-		&dto.Category{},
-		&dto.Brand{},
-		&dto.Color{},
-		&dto.Generation{},
-		&dto.Body{},
-		&dto.City{},
-		&dto.Car{},
-		&dto.CarPhoto{},
-		&dto.Model{},
+		&models.User{},
+		&models.Category{},
+		&models.Brand{},
+		&models.Color{},
+		&models.Generation{},
+		&models.Body{},
+		&models.City{},
+		&models.Car{},
+		&models.CarPhoto{},
+		&models.Model{},
 	)
 	if err != nil {
 		log.Fatal("Migration failed", err)
