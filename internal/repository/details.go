@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/bwjson/kolesa_api/internal/models"
 	"gorm.io/gorm"
+	"log"
 )
 
 type DetailsRepo struct {
@@ -146,11 +147,13 @@ func (r *DetailsRepo) GetModelsByBrand(ctx context.Context, brand string) ([]mod
 }
 
 func (r *DetailsRepo) GetCategoryBySource(ctx context.Context, source string) (models.Category, error) {
+	log.Println("here")
 	var category models.Category
 
 	res := r.db.WithContext(ctx).First(&category, "source = ?", source)
 
 	if res.Error != nil {
+		log.Println(res.Error)
 		return models.Category{}, errors.New("No categories found")
 	}
 

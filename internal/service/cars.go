@@ -16,7 +16,7 @@ type CarsService struct {
 }
 
 func NewCarsService(repo repository.Cars, userRepo repository.Users, detailsRepo repository.Details, s3 *s3.S3Client) *CarsService {
-	return &CarsService{repo: repo, userRepo: userRepo, s3: s3}
+	return &CarsService{repo: repo, userRepo: userRepo, detailsRepo: detailsRepo, s3: s3}
 }
 
 func (s *CarsService) Create(ctx context.Context, dto dto.CreateCarDTO) (int, error) {

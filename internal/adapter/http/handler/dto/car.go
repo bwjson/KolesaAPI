@@ -16,5 +16,6 @@ type CreateCarDTO struct {
 	Description            string   `json:"description,omitempty"`
 	SteeringWheel          string   `json:"steering_wheel,omitempty"`
 	WheelDrive             string   `json:"wheel_drive,omitempty"`
+	Year                   string   `json:"year,omitempty"`
 	Images                 []string `json:"images,omitempty"`
 }
