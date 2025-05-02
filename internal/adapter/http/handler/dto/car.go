@@ -8,7 +8,7 @@ type CreateCarDTO struct {
 	BodySource       string   `json:"body_source"`
 	CitySource       string   `json:"city_source"`
 	ModelSource      string   `json:"model_source"`
-	PhoneNumber      string   `json:"phone_number"`
+	PhoneNumber      string   `json:"phone"`
 	Price            string   `json:"price,omitempty"`
 	EngineVolume     string   `json:"engine_volume,omitempty"`
 	Mileage          string   `json:"mileage,omitempty"`
