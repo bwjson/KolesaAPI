@@ -74,7 +74,11 @@ func (r *CarsRepo) SearchCars(ctx context.Context, query, authToken string, limi
 	return cars, totalCount, nil
 }
 
-func (r *CarsRepo) Create(ctx context.Context, good models.Car) (int, error) {
+func (r *CarsRepo) Create(ctx context.Context, car models.Car) (int, error) {
+	err := r.db.Create(&car).Error
+	if err != nil {
+		return 0, err
+	}
 
 	return 0, nil
 }

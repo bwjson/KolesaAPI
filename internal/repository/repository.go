@@ -26,6 +26,13 @@ type Details interface {
 	GetAllColors(ctx context.Context) ([]models.Color, error)
 	GetSourceById(ctx context.Context, carId int) (string, error)
 	AddSourceUrl(ctx context.Context, photo models.CarPhoto) error
+	GetCategoryBySource(ctx context.Context, source string) (models.Category, error)
+	GetBrandBySource(ctx context.Context, source string) (models.Brand, error)
+	GetModelBySource(ctx context.Context, source string) (models.Model, error)
+	GetColorBySource(ctx context.Context, source string) (models.Color, error)
+	GetBodyBySource(ctx context.Context, source string) (models.Body, error)
+	GetGenerationBySource(ctx context.Context, source string) (models.Generation, error)
+	GetCityBySource(ctx context.Context, source string) (models.City, error)
 }
 
 type Users interface {

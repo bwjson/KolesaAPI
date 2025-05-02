@@ -1,13 +1,13 @@
 package dto
 
 type CreateCarDTO struct {
-	CategoryID             uint     `json:"category_id"`
-	BrandID                uint     `json:"brand_id"`
-	ColorID                uint     `json:"color_id"`
-	GenerationID           uint     `json:"generation_id"`
-	BodyID                 uint     `json:"body_id"`
-	CityID                 uint     `json:"city_id"`
-	ModelID                uint     `json:"model_id"`
+	CategorySource         string   `json:"category_source"`
+	BrandSource            string   `json:"brand_source"`
+	ColorSource            string   `json:"color_source"`
+	GenerationSource       string   `json:"generation_source"`
+	BodySource             string   `json:"body_source"`
+	CitySource             string   `json:"city_source"`
+	ModelSource            string   `json:"model_source"`
 	CurrentUserPhoneNumber string   `json:"current_user_phone_number"`
 	Price                  string   `json:"price,omitempty"`
 	EngineVolume           string   `json:"engine_volume,omitempty"`

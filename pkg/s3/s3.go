@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"log/slog"
 	"net/http"
 )
@@ -150,8 +149,6 @@ func (s3 *S3Client) UploadFile(filename string, fileData []byte) (string, error)
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return "", err
 	}
-
-	log.Println(result)
 
 	return result["fileId"].(string), nil
 }

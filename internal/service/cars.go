@@ -2,14 +2,10 @@ package service
 
 import (
 	"context"
-	"encoding/base64"
-	"errors"
-	"fmt"
 	"github.com/bwjson/kolesa_api/internal/adapter/http/handler/dto"
 	"github.com/bwjson/kolesa_api/internal/models"
 	"github.com/bwjson/kolesa_api/internal/repository"
 	"github.com/bwjson/kolesa_api/pkg/s3"
-	"strings"
 )
 
 type CarsService struct {
@@ -29,15 +25,50 @@ func (s *CarsService) Create(ctx context.Context, dto dto.CreateCarDTO) (int, er
 		return 0, err
 	}
 
+	category, err := s.detailsRepo.GetCategoryBySource(ctx, dto.CategorySource)
+	if err != nil {
+		return 0, err
+	}
+
+	brand, err := s.detailsRepo.GetBrandBySource(ctx, dto.BrandSource)
+	if err != nil {
+		return 0, err
+	}
+
+	model, err := s.detailsRepo.GetModelBySource(ctx, dto.ModelSource)
+	if err != nil {
+		return 0, err
+	}
+
+	generation, err := s.detailsRepo.GetGenerationBySource(ctx, dto.GenerationSource)
+	if err != nil {
+		return 0, err
+	}
+
+	body, err := s.detailsRepo.GetBodyBySource(ctx, dto.BodySource)
+	if err != nil {
+		return 0, err
+	}
+
+	color, err := s.detailsRepo.GetColorBySource(ctx, dto.ColorSource)
+	if err != nil {
+		return 0, err
+	}
+
+	city, err := s.detailsRepo.GetCityBySource(ctx, dto.CitySource)
+	if err != nil {
+		return 0, err
+	}
+
 	car := models.Car{
 		UserID:           uint(user.Id),
-		CategoryID:       dto.CategoryID,
-		BrandID:          dto.BrandID,
-		ColorID:          dto.ColorID,
-		GenerationID:     dto.GenerationID,
-		BodyID:           dto.BodyID,
-		CityID:           dto.CityID,
-		ModelID:          dto.ModelID,
+		CategoryID:       category.ID,
+		BrandID:          brand.ID,
+		ModelID:          model.ID,
+		GenerationID:     generation.ID,
+		BodyID:           body.ID,
+		ColorID:          color.ID,
+		CityID:           city.ID,
 		Price:            dto.Price,
 		EngineVolume:     dto.EngineVolume,
 		Mileage:          dto.Mileage,
@@ -47,31 +78,31 @@ func (s *CarsService) Create(ctx context.Context, dto dto.CreateCarDTO) (int, er
 		WheelDrive:       dto.WheelDrive,
 	}
 
-	var uploadedUrls []string
-
-	for i, base64Image := range dto.Images {
-		dataIdx := strings.Index(base64Image, "base64, ")
-		if dataIdx == -1 {
-			return 0, errors.New("Invalid base64 format")
-		}
-
-		fileBytes, err := base64.StdEncoding.DecodeString(base64Image[dataIdx+7:])
-		if err != nil {
-			return 0, errors.New("Cannot decode base64 image")
-		}
-
-		// logic of unique identifier
-		fileName := fmt.Sprintf("user-%d-test-%d", user.Id, i)
-
-		_, err = s.s3.UploadFile(fileName, fileBytes)
-		if err != nil {
-			return 0, err
-		}
-
-		uploadedUrls = append(uploadedUrls, fileName)
-	}
-
-	// Logic of adding photos and car_photos
+	//var uploadedUrls []string
+	//
+	//for i, base64Image := range dto.Images {
+	//	dataIdx := strings.Index(base64Image, "base64, ")
+	//	if dataIdx == -1 {
+	//		return 0, errors.New("Invalid base64 format")
+	//	}
+	//
+	//	fileBytes, err := base64.StdEncoding.DecodeString(base64Image[dataIdx+7:])
+	//	if err != nil {
+	//		return 0, errors.New("Cannot decode base64 image")
+	//	}
+	//
+	//	// logic of unique identifier
+	//	fileName := fmt.Sprintf("user-%d-test-%d", user.Id, i)
+	//
+	//	_, err = s.s3.UploadFile(fileName, fileBytes)
+	//	if err != nil {
+	//		return 0, err
+	//	}
+	//
+	//	uploadedUrls = append(uploadedUrls, fileName)
+	//}
+	//
+	//// Logic of adding photos and car_photos
 
 	return s.repo.Create(ctx, car)
 }

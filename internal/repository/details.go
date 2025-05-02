@@ -144,3 +144,69 @@ func (r *DetailsRepo) GetModelsByBrand(ctx context.Context, brand string) ([]mod
 
 	return models, nil
 }
+
+func (r *DetailsRepo) GetCategoryBySource(ctx context.Context, source string) (models.Category, error) {
+	var category models.Category
+
+	res := r.db.WithContext(ctx).First(&category, "source = ?", source)
+
+	if res.Error != nil {
+		return models.Category{}, errors.New("No categories found")
+	}
+
+	return category, nil
+}
+
+func (r *DetailsRepo) GetBrandBySource(ctx context.Context, source string) (models.Brand, error) {
+	var brand models.Brand
+	res := r.db.WithContext(ctx).First(&brand, "source = ?", source)
+	if res.Error != nil {
+		return models.Brand{}, errors.New("no brand found")
+	}
+	return brand, nil
+}
+
+func (r *DetailsRepo) GetModelBySource(ctx context.Context, source string) (models.Model, error) {
+	var model models.Model
+	res := r.db.WithContext(ctx).First(&model, "source = ?", source)
+	if res.Error != nil {
+		return models.Model{}, errors.New("no model found")
+	}
+	return model, nil
+}
+
+func (r *DetailsRepo) GetColorBySource(ctx context.Context, source string) (models.Color, error) {
+	var color models.Color
+	res := r.db.WithContext(ctx).First(&color, "source = ?", source)
+	if res.Error != nil {
+		return models.Color{}, errors.New("no color found")
+	}
+	return color, nil
+}
+
+func (r *DetailsRepo) GetBodyBySource(ctx context.Context, source string) (models.Body, error) {
+	var body models.Body
+	res := r.db.WithContext(ctx).First(&body, "source = ?", source)
+	if res.Error != nil {
+		return models.Body{}, errors.New("no body found")
+	}
+	return body, nil
+}
+
+func (r *DetailsRepo) GetGenerationBySource(ctx context.Context, source string) (models.Generation, error) {
+	var generation models.Generation
+	res := r.db.WithContext(ctx).First(&generation, "source = ?", source)
+	if res.Error != nil {
+		return models.Generation{}, errors.New("no generation found")
+	}
+	return generation, nil
+}
+
+func (r *DetailsRepo) GetCityBySource(ctx context.Context, source string) (models.City, error) {
+	var city models.City
+	res := r.db.WithContext(ctx).First(&city, "source = ?", source)
+	if res.Error != nil {
+		return models.City{}, errors.New("no city found")
+	}
+	return city, nil
+}
