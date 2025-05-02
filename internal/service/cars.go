@@ -20,7 +20,7 @@ func NewCarsService(repo repository.Cars, userRepo repository.Users, detailsRepo
 }
 
 func (s *CarsService) Create(ctx context.Context, dto dto.CreateCarDTO) (int, error) {
-	user, err := s.userRepo.GetByPhoneNumber(ctx, dto.CurrentUserPhoneNumber)
+	user, err := s.userRepo.GetByPhoneNumber(ctx, dto.PhoneNumber)
 	if err != nil {
 		return 0, err
 	}
