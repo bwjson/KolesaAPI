@@ -2,19 +2,24 @@ package service
 
 import (
 	"context"
+	"encoding/base64"
+	"errors"
+	"fmt"
 	"github.com/bwjson/kolesa_api/internal/adapter/http/handler/dto"
 	"github.com/bwjson/kolesa_api/internal/models"
 	"github.com/bwjson/kolesa_api/internal/repository"
 	"github.com/bwjson/kolesa_api/pkg/s3"
+	"strings"
 )
 
 type CarsService struct {
-	repo     repository.Cars
-	userRepo repository.Users
-	s3       *s3.S3Client
+	repo        repository.Cars
+	userRepo    repository.Users
+	detailsRepo repository.Details
+	s3          *s3.S3Client
 }
 
-func NewCarsService(repo repository.Cars, userRepo repository.Users, s3 *s3.S3Client) *CarsService {
+func NewCarsService(repo repository.Cars, userRepo repository.Users, detailsRepo repository.Details, s3 *s3.S3Client) *CarsService {
 	return &CarsService{repo: repo, userRepo: userRepo, s3: s3}
 }
 
@@ -40,7 +45,30 @@ func (s *CarsService) Create(ctx context.Context, dto dto.CreateCarDTO) (int, er
 		Description:      dto.Description,
 		SteeringWheel:    dto.SteeringWheel,
 		WheelDrive:       dto.WheelDrive,
-		// AvatarSource:     ,
+	}
+
+	var uploadedUrls []string
+
+	for i, base64Image := range dto.Images {
+		dataIdx := strings.Index(base64Image, "base64, ")
+		if dataIdx == -1 {
+			return 0, errors.New("Invalid base64 format")
+		}
+
+		fileBytes, err := base64.StdEncoding.DecodeString(base64Image[dataIdx+7:])
+		if err != nil {
+			return 0, errors.New("Cannot decode base64 image")
+		}
+
+		// logic of unique identifier
+		fileName := fmt.Sprintf("user-%d-test-%d", user.Id, i)
+
+		_, err = s.s3.UploadFile(fileName, fileBytes)
+		if err != nil {
+			return 0, err
+		}
+
+		uploadedUrls = append(uploadedUrls, fileName)
 	}
 
 	// Logic of adding photos and car_photos

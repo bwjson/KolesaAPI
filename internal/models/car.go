@@ -30,6 +30,7 @@ type Car struct {
 	Description      string `json:"description,omitempty"`
 	SteeringWheel    string `json:"steering_wheel,omitempty"` // Left/Right
 	WheelDrive       string `json:"wheel_drive,omitempty"`    // FWD/RWD/AWD
+	Year             string `json:"year,omitempty"`
 	// Avatar url
 	AvatarSource string `json:"avatar_source,omitempty"`
 	// Time params

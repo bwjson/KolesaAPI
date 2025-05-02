@@ -84,6 +84,8 @@ func LoadConfig() *Config {
 
 	cfg.S3.KeyID = os.Getenv("S3_KEY_ID")
 	cfg.S3.BucketID = os.Getenv("S3_BUCKET_ID")
+	//cfg.S3.MainFolderName = os.Getenv("S3_MAIN_FOLDER_NAME")
+	//cfg.S3.TempFolderName = os.Getenv("S3_TEMP_FOLDER_NAME")
 	cfg.S3.AppKey = os.Getenv("S3_APP_KEY")
 	cfg.S3.AuthToken = os.Getenv("S3_AUTH_TOKEN")
 	cfg.S3.ApiUrl = os.Getenv("S3_API_URL")

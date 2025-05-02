@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"log/slog"
 	"net/http"
 )
@@ -76,7 +77,6 @@ func (s3 *S3Client) DownloadFile(bucketName, fileId string) ([]byte, error) {
 		return nil, err
 	}
 
-	s3.log.Info("Using Auth Token: %s", s3.AuthToken)
 	req.Header.Set("Authorization", s3.AuthToken)
 
 	resp, err := http.DefaultClient.Do(req)
@@ -131,8 +131,8 @@ func (s3 *S3Client) UploadFile(filename string, fileData []byte) (string, error)
 	}
 
 	req.Header.Set("Authorization", authToken)
-	req.Header.Set("X-Bz-File-Name", filename)
-	req.Header.Set("Content-Type", "b2/x-auto")
+	req.Header.Set("X-Bz-File-Name", "main_photos/"+filename+".jpg")
+	req.Header.Set("Content-Type", "image/jpeg")
 	req.Header.Set("X-Bz-Content-Sha1", "do_not_verify")
 
 	client := &http.Client{}
@@ -146,10 +146,12 @@ func (s3 *S3Client) UploadFile(filename string, fileData []byte) (string, error)
 		return "", fmt.Errorf("failed to upload file: %s", resp.Status)
 	}
 
-	var result string
+	var result map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return "", err
 	}
 
-	return result, nil
+	log.Println(result)
+
+	return result["fileId"].(string), nil
 }

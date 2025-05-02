@@ -25,6 +25,6 @@ type Services struct {
 
 func NewServices(repos *repository.Repos, s3 *s3.S3Client) *Services {
 	return &Services{
-		Cars: NewCarsService(repos.Cars, repos.Users, s3),
+		Cars: NewCarsService(repos.Cars, repos.Users, repos.Details, s3),
 	}
 }

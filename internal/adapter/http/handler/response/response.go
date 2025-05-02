@@ -5,11 +5,13 @@ import (
 )
 
 type errorResponse struct {
+	Status  string `json:"status"`
 	Message string `json:"message"`
 }
 
 type successResponse struct {
-	Data interface{} `json:"data"`
+	Status string      `json:"status"`
+	Data   interface{} `json:"data"`
 }
 
 type statusResponse struct {
@@ -17,9 +19,19 @@ type statusResponse struct {
 }
 
 func NewSuccessResponse(c *gin.Context, statusCode int, data interface{}) {
-	c.AbortWithStatusJSON(statusCode, successResponse{data})
+	var response successResponse
+
+	if statusCode == 200 {
+		response = successResponse{
+			Status: "ok",
+			Data:   data,
+		}
+	}
+	c.AbortWithStatusJSON(statusCode, response)
 }
 
 func NewErrorResponse(c *gin.Context, statusCode int, message string) {
-	c.AbortWithStatusJSON(statusCode, errorResponse{message})
+	c.AbortWithStatusJSON(statusCode, errorResponse{
+		Status:  "error",
+		Message: message})
 }
