@@ -237,7 +237,13 @@ func (h *Handler) Create(c *gin.Context) {
 		response.NewErrorResponse(c, http.StatusBadRequest, err.Error())
 	}
 
-	h.services.Cars.Create(ctx, car)
+	zero, err := h.services.Cars.Create(ctx, car)
+	if err != nil {
+		response.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	response.NewSuccessResponse(c, http.StatusOK, zero)
 }
 
 func (h *Handler) UpdateById(c *gin.Context) {}
