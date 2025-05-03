@@ -100,8 +100,12 @@ func (s3 *S3Client) getUploadUrl() (string, string, error) {
 		return "", "", err
 	}
 
-	// add get_s3_creds
-	req.Header.Set("Authorization", s3.AuthToken)
+	auth_resp, err := s3.GetS3Credentials()
+	if err != nil {
+		return "", "", err
+	}
+
+	req.Header.Set("Authorization", auth_resp.AuthToken)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
