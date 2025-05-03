@@ -2,10 +2,14 @@ package service
 
 import (
 	"context"
+	"encoding/base64"
+	"errors"
+	"fmt"
 	"github.com/bwjson/kolesa_api/internal/adapter/http/handler/dto"
 	"github.com/bwjson/kolesa_api/internal/models"
 	"github.com/bwjson/kolesa_api/internal/repository"
 	"github.com/bwjson/kolesa_api/pkg/s3"
+	"log"
 )
 
 type CarsService struct {
@@ -19,7 +23,7 @@ func NewCarsService(repo repository.Cars, userRepo repository.Users, detailsRepo
 	return &CarsService{repo: repo, userRepo: userRepo, detailsRepo: detailsRepo, s3: s3}
 }
 
-func (s *CarsService) Create(ctx context.Context, dto dto.CreateCarDTO) (int, error) {
+func (s *CarsService) Create(ctx context.Context, dto dto.CreateCarDTO) (uint, error) {
 	user, err := s.userRepo.GetByPhoneNumber(ctx, dto.PhoneNumber)
 	if err != nil {
 		return 0, err
@@ -78,33 +82,51 @@ func (s *CarsService) Create(ctx context.Context, dto dto.CreateCarDTO) (int, er
 		WheelDrive:       dto.WheelDrive,
 	}
 
-	//var uploadedUrls []string
-	//
-	//for i, base64Image := range dto.Images {
-	//	dataIdx := strings.Index(base64Image, "base64, ")
-	//	if dataIdx == -1 {
-	//		return 0, errors.New("Invalid base64 format")
-	//	}
-	//
-	//	fileBytes, err := base64.StdEncoding.DecodeString(base64Image[dataIdx+7:])
-	//	if err != nil {
-	//		return 0, errors.New("Cannot decode base64 image")
-	//	}
-	//
-	//	// logic of unique identifier
-	//	fileName := fmt.Sprintf("user-%d-test-%d", user.Id, i)
-	//
-	//	_, err = s.s3.UploadFile(fileName, fileBytes)
-	//	if err != nil {
-	//		return 0, err
-	//	}
-	//
-	//	uploadedUrls = append(uploadedUrls, fileName)
-	//}
-	//
-	//// Logic of adding photos and car_photos
+	log.Println(car.UserID)
 
-	return s.repo.Create(ctx, car)
+	// Transaction if other part doesnt work so we can rollback the changes
+	carId, err := s.repo.Create(ctx, car)
+	if err != nil {
+		return 0, err
+	}
+
+	uniqueFilenamePart := fmt.Sprintf("%d-%d", carId, user.Id)
+
+	var uploadedUrls []string
+
+	for i, base64Image := range dto.Images {
+		fileBytes, err := base64.StdEncoding.DecodeString(base64Image)
+		if err != nil {
+			return 0, errors.New("Cannot decode base64 image")
+		}
+
+		fileName := uniqueFilenamePart + fmt.Sprintf("-%d", i)
+
+		_, err = s.s3.UploadFile(fileName, fileBytes)
+		if err != nil {
+			return 0, err
+		}
+
+		uploadedUrls = append(uploadedUrls, fileName)
+	}
+
+	// avatar
+	err = s.repo.UpdateField(ctx, int(carId), "avatar_source",
+		fmt.Sprintf("https://f006.backblazeb2.com/file/kolesa/main_photos/%v.jpg", uploadedUrls[0]))
+	if err != nil {
+		return 0, err
+	}
+
+	// adding to car_photos
+	for _, photoUrl := range uploadedUrls {
+		car_photo := models.CarPhoto{
+			CarID:    carId,
+			PhotoUrl: photoUrl,
+		}
+		err = s.detailsRepo.AddSourceUrl(ctx, car_photo)
+	}
+
+	return carId, nil
 }
 
 func (s *CarsService) GetAllExtended(ctx context.Context, limit, offset int) ([]models.Car, int, error) {

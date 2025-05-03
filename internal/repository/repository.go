@@ -7,13 +7,14 @@ import (
 )
 
 type Cars interface {
-	Create(ctx context.Context, good models.Car) (int, error)
+	Create(ctx context.Context, good models.Car) (uint, error)
 	GetAllCars(ctx context.Context, filters map[string]interface{}, authToken string) ([]models.Car, int64, error) // second param is total_count
 	GetAllCarsExtended(ctx context.Context, limit, offset int) ([]models.Car, int, error)
 	GetCarById(ctx context.Context, id int) (models.Car, error)
 	UpdateById(ctx context.Context, id int, car models.Car) error
 	DeleteById(ctx context.Context, id int) error
 	SearchCars(ctx context.Context, query, authToken string, limit, offset int) ([]models.Car, int64, error)
+	UpdateField(ctx context.Context, id int, field string, value string) error
 }
 
 type Details interface {
@@ -25,7 +26,6 @@ type Details interface {
 	GetAllBodies(ctx context.Context) ([]models.Body, error)
 	GetAllColors(ctx context.Context) ([]models.Color, error)
 	GetSourceById(ctx context.Context, carId int) (string, error)
-	AddSourceUrl(ctx context.Context, photo models.CarPhoto) error
 	GetCategoryBySource(ctx context.Context, source string) (models.Category, error)
 	GetBrandBySource(ctx context.Context, source string) (models.Brand, error)
 	GetModelBySource(ctx context.Context, source string) (models.Model, error)
@@ -33,6 +33,7 @@ type Details interface {
 	GetBodyBySource(ctx context.Context, source string) (models.Body, error)
 	GetGenerationBySource(ctx context.Context, source string) (models.Generation, error)
 	GetCityBySource(ctx context.Context, source string) (models.City, error)
+	AddSourceUrl(ctx context.Context, photo models.CarPhoto) error
 }
 
 type Users interface {

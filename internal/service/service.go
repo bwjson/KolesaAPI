@@ -9,7 +9,7 @@ import (
 )
 
 type Cars interface {
-	Create(ctx context.Context, carDTO dto.CreateCarDTO) (int, error)
+	Create(ctx context.Context, carDTO dto.CreateCarDTO) (uint, error)
 	GetAllExtended(ctx context.Context, limit, offset int) ([]models.Car, int, error)
 	GetById(ctx context.Context, id int) (models.Car, error)
 	GetAll(ctx context.Context, filters map[string]interface{}) ([]models.Car, int64, error) // second param is total_count

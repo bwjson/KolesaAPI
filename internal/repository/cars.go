@@ -74,13 +74,13 @@ func (r *CarsRepo) SearchCars(ctx context.Context, query, authToken string, limi
 	return cars, totalCount, nil
 }
 
-func (r *CarsRepo) Create(ctx context.Context, car models.Car) (int, error) {
+func (r *CarsRepo) Create(ctx context.Context, car models.Car) (uint, error) {
 	err := r.db.Create(&car).Error
 	if err != nil {
 		return 0, err
 	}
 
-	return 0, nil
+	return car.ID, nil
 }
 
 func (r *CarsRepo) GetAllCarsExtended(ctx context.Context, limit, offset int) ([]models.Car, int, error) {
@@ -239,6 +239,22 @@ func (r *CarsRepo) GetCarById(ctx context.Context, id int) (models.Car, error) {
 }
 
 func (r *CarsRepo) UpdateById(ctx context.Context, id int, good models.Car) error {
+	return nil
+}
+
+func (r *CarsRepo) UpdateField(ctx context.Context, id int, field string, value string) error {
+	result := r.db.WithContext(ctx).
+		Model(&models.Car{}).
+		Where("id = ?", id).
+		Update(field, value)
+
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return fmt.Errorf("Car with ID = %d not found", id)
+		}
+		return fmt.Errorf("Database error: %w", result.Error)
+	}
+
 	return nil
 }
 
