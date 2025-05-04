@@ -38,10 +38,14 @@ definitions:
     properties:
       message:
         type: string
+      status:
+        type: string
     type: object
   response.successResponse:
     properties:
       data: {}
+      status:
+        type: string
     type: object
 host: localhost:8000
 info:
@@ -448,13 +452,14 @@ paths:
   /s3/upload_file:
     post:
       consumes:
-      - multipart/form-data
+      - application/json
       parameters:
-      - description: File to upload
-        in: formData
+      - description: Base64 image
+        in: body
         name: file
         required: true
-        type: file
+        schema:
+          type: string
       produces:
       - application/json
       responses:

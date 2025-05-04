@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"github.com/bwjson/kolesa_api/internal/adapter/http/handler/dto"
 	"github.com/bwjson/kolesa_api/internal/adapter/http/handler/response"
+	"github.com/bwjson/kolesa_api/internal/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -178,6 +180,10 @@ func (h *Handler) GetCarById(c *gin.Context) {
 
 	car, err := h.services.Cars.GetById(ctx, id)
 	if err != nil {
+		if errors.Is(err, service.ErrNotFound) {
+			response.NewErrorResponse(c, http.StatusNotFound, err.Error())
+			return
+		}
 		response.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -243,7 +249,11 @@ func (h *Handler) Create(c *gin.Context) {
 		return
 	}
 
-	response.NewSuccessResponse(c, http.StatusOK, id)
+	data := map[string]interface{}{
+		"id": id,
+	}
+
+	response.NewSuccessResponse(c, http.StatusOK, data)
 }
 
 func (h *Handler) UpdateById(c *gin.Context) {}

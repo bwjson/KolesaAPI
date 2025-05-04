@@ -3,7 +3,6 @@ package handler
 import (
 	"github.com/bwjson/kolesa_api/internal/adapter/http/handler/metrics"
 	"github.com/bwjson/kolesa_api/internal/grpc"
-	"github.com/bwjson/kolesa_api/internal/repository"
 	"github.com/bwjson/kolesa_api/internal/service"
 	"github.com/bwjson/kolesa_api/pkg/s3"
 	"github.com/gin-contrib/cors"
@@ -18,13 +17,12 @@ import (
 type Handler struct {
 	log      *slog.Logger
 	services *service.Services
-	repos    *repository.Repos
 	s3       *s3.S3Client
 	gRPC     *grpc.Client
 }
 
-func NewHandler(log *slog.Logger, services *service.Services, repo *repository.Repos, s3 *s3.S3Client, gRPC *grpc.Client) *Handler {
-	return &Handler{log: log, services: services, repos: repo, s3: s3, gRPC: gRPC}
+func NewHandler(log *slog.Logger, services *service.Services, s3 *s3.S3Client, gRPC *grpc.Client) *Handler {
+	return &Handler{log: log, services: services, s3: s3, gRPC: gRPC}
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {

@@ -228,9 +228,11 @@ func (r *CarsRepo) GetCarById(ctx context.Context, id int) (models.Car, error) {
 		Preload("Generation").
 		Preload("Body").
 		Preload("City").First(&car, "id = ?", id)
+
+	// do custom in service layer
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return models.Car{}, fmt.Errorf("Car with ID = %d not found", id)
+			return models.Car{}, gorm.ErrRecordNotFound
 		}
 		return models.Car{}, fmt.Errorf("Database error: %w", result.Error)
 	}

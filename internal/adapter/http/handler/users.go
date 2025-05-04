@@ -25,7 +25,7 @@ func (h *Handler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	id, err := h.repos.Users.Create(c.Request.Context(), user)
+	id, err := h.services.Users.Create(c.Request.Context(), user)
 	if err != nil {
 		response.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -41,7 +41,7 @@ func (h *Handler) CreateUser(c *gin.Context) {
 // @Failure      500  {object}  response.errorResponse
 // @Router       /users/get_all [get]
 func (h *Handler) GetUsers(c *gin.Context) {
-	users, err := h.repos.Users.GetAll(c.Request.Context())
+	users, err := h.services.Users.GetAll(c.Request.Context())
 	if err != nil {
 		response.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -65,7 +65,7 @@ func (h *Handler) GetUserByID(c *gin.Context) {
 		return
 	}
 
-	user, err := h.repos.Users.GetByID(c.Request.Context(), id)
+	user, err := h.services.Users.GetByID(c.Request.Context(), id)
 	if err != nil {
 		response.NewErrorResponse(c, http.StatusNotFound, err.Error())
 		return
@@ -98,7 +98,7 @@ func (h *Handler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	err = h.repos.Users.Update(c.Request.Context(), id, user)
+	err = h.services.Users.Update(c.Request.Context(), id, user)
 	if err != nil {
 		response.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -123,13 +123,13 @@ func (h *Handler) DeleteUser(c *gin.Context) {
 		return
 	}
 
-	_, err = h.repos.Users.GetByID(c.Request.Context(), id)
+	_, err = h.services.Users.GetByID(c.Request.Context(), id)
 	if err != nil {
 		response.NewErrorResponse(c, http.StatusNotFound, fmt.Sprintf("There is no car with ID: %d", id))
 		return
 	}
 
-	err = h.repos.Users.Delete(c.Request.Context(), id)
+	err = h.services.Users.Delete(c.Request.Context(), id)
 	if err != nil {
 		response.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

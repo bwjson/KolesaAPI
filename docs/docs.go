@@ -628,7 +628,7 @@ const docTemplate = `{
         "/s3/upload_file": {
             "post": {
                 "consumes": [
-                    "multipart/form-data"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -639,11 +639,13 @@ const docTemplate = `{
                 "summary": "Upload file",
                 "parameters": [
                     {
-                        "type": "file",
-                        "description": "File to upload",
+                        "description": "Base64 image",
                         "name": "file",
-                        "in": "formData",
-                        "required": true
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -932,13 +934,19 @@ const docTemplate = `{
             "properties": {
                 "message": {
                     "type": "string"
+                },
+                "status": {
+                    "type": "string"
                 }
             }
         },
         "response.successResponse": {
             "type": "object",
             "properties": {
-                "data": {}
+                "data": {},
+                "status": {
+                    "type": "string"
+                }
             }
         }
     }

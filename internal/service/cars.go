@@ -9,6 +9,7 @@ import (
 	"github.com/bwjson/kolesa_api/internal/models"
 	"github.com/bwjson/kolesa_api/internal/repository"
 	"github.com/bwjson/kolesa_api/pkg/s3"
+	"gorm.io/gorm"
 	"log"
 )
 
@@ -110,7 +111,7 @@ func (s *CarsService) Create(ctx context.Context, dto dto.CreateCarDTO) (uint, e
 		uploadedUrls = append(uploadedUrls, fileName)
 	}
 
-	// avatar
+	// avatar change this with config variables
 	err = s.repo.UpdateField(ctx, int(carId), "avatar_source",
 		fmt.Sprintf("https://f006.backblazeb2.com/file/kolesa/main_photos/%v.jpg", uploadedUrls[0]))
 	if err != nil {
@@ -143,7 +144,15 @@ func (s *CarsService) GetAll(ctx context.Context, filters map[string]interface{}
 }
 
 func (s *CarsService) GetById(ctx context.Context, id int) (models.Car, error) {
-	return s.repo.GetCarById(ctx, id)
+	car, err := s.repo.GetCarById(ctx, id)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return car, ErrNotFound
+		}
+		return car, err
+	}
+
+	return car, nil
 }
 
 func (s *CarsService) UpdateById(ctx context.Context, id int, car models.Car) error {
