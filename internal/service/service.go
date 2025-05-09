@@ -55,6 +55,7 @@ type Services struct {
 	Details Details
 	Users   Users
 	S3      *s3.S3Client
+	//CarProducer *producer.CarProducer
 }
 
 func NewServices(repos *repository.Repos, s3 *s3.S3Client) *Services {

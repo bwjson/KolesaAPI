@@ -1,34 +1,13 @@
 version: '3.9'
 
 services:
-#  nats
-#  prometheus
-#  grafana
-  db:
-    image: postgres:15
-    container_name: postgres_db
-    restart: always
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+  nats:
+    image: nats:latest
+    container_name: nats
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  api-gateway:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: api-gateway
-    depends_on:
-      - db
-    env_file:
-      .env
-    ports:
-      - "8000:8000"
-    restart: always
+      - "4222:4222"
+      - "8222:8222"
+    restart: unless-stopped
 
 volumes:
   postgres_data:

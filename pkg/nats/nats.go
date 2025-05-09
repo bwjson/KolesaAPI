@@ -6,7 +6,7 @@ import (
 )
 
 type NatsClient struct {
-	conn *nats.Conn
+	Conn *nats.Conn
 }
 
 func New(ctx context.Context, hosts []string, nkey string, isTest bool) (*NatsClient, error) {
@@ -20,9 +20,9 @@ func New(ctx context.Context, hosts []string, nkey string, isTest bool) (*NatsCl
 		panic(err)
 	}
 
-	return &NatsClient{conn: conn}, nil
+	return &NatsClient{Conn: conn}, nil
 }
 
 func (nc *NatsClient) Close() {
-	nc.conn.Close()
+	nc.Conn.Close()
 }

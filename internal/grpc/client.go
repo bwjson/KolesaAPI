@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	emailv1 "github.com/bwjson/kolesa_proto/gen/go/email"
 	ssov1 "github.com/bwjson/kolesa_proto/gen/go/sso"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -12,8 +13,9 @@ import (
 )
 
 type Client struct {
-	api ssov1.AuthClient
-	log *slog.Logger
+	api   ssov1.AuthClient
+	email emailv1.EmailClient
+	log   *slog.Logger
 }
 
 func New(ctx context.Context, log *slog.Logger, addr string, timeout time.Duration, retriesCount int) (*Client, error) {

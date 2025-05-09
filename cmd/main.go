@@ -32,6 +32,16 @@ func main() {
 	log := setupLogger(cfg.Env)
 	log.Info("Start the application, config loaded")
 
+	// NATS
+	//nc, err := nats.New(ctx, cfg.Nats.Hosts, cfg.Nats.NKey, true)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//
+	//producer := Nats.NewCarProducer(nc)
+
+	//log.Info("NATS connection status:", nc.Conn.Status().String())
+
 	db, err := postgres.NewPostgresDB(cfg.Db.User, cfg.Db.Name, cfg.Db.Port, cfg.Db.Password, cfg.Db.Host, cfg.Db.Sslmode)
 	if err != nil {
 		log.Error("Cannot connect to Postgres", err.Error())
@@ -48,6 +58,8 @@ func main() {
 
 	repo := repository.NewRepos(db)
 
+	// NATS
+	//services := service.NewServices(repo, s3, producer)
 	services := service.NewServices(repo, s3)
 
 	h := handler.NewHandler(log, services, s3, gRPC)

@@ -18,6 +18,7 @@ type CarsService struct {
 	userRepo    repository.Users
 	detailsRepo repository.Details
 	s3          *s3.S3Client
+	//nats        *Nats.CarProducer
 }
 
 func NewCarsService(repo repository.Cars, userRepo repository.Users, detailsRepo repository.Details, s3 *s3.S3Client) *CarsService {
@@ -126,6 +127,21 @@ func (s *CarsService) Create(ctx context.Context, dto dto.CreateCarDTO) (uint, e
 		}
 		err = s.detailsRepo.AddSourceUrl(ctx, car_photo)
 	}
+
+	// NATS
+	//event := Nats.CarCreatedEvent{
+	//	CarID:  string(car.ID),
+	//	UserID: string(user.Id),
+	//	Email:  user.Email,
+	//	Brand:  brand.Source,
+	//	Model:  model.Source,
+	//}
+
+	//log.Println("NATS: PUSHING")
+	//err = s.nats.Push(ctx, event)
+	//if err != nil {
+	//	log.Printf("Error: %v", err)
+	//}
 
 	return carId, nil
 }

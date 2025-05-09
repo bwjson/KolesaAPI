@@ -147,7 +147,6 @@ func (r *DetailsRepo) GetModelsByBrand(ctx context.Context, brand string) ([]mod
 }
 
 func (r *DetailsRepo) GetCategoryBySource(ctx context.Context, source string) (models.Category, error) {
-	log.Println("here")
 	var category models.Category
 
 	res := r.db.WithContext(ctx).First(&category, "source = ?", source)
