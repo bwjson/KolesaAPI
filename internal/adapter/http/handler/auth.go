@@ -86,7 +86,7 @@ func (h *Handler) VerifyCode(c *gin.Context) {
 	var user *models.User
 	user, err = h.services.Users.GetByPhoneNumber(c.Request.Context(), newUser.PhoneNumber)
 
-	if &user == nil {
+	if user == nil {
 		_, err := h.services.Users.Create(c.Request.Context(), newUser)
 		if err != nil {
 			response.NewErrorResponse(c, http.StatusInternalServerError, "Cannot create new user")
