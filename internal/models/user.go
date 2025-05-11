@@ -7,7 +7,7 @@ type User struct {
 	PhoneNumber  string    `gorm:"unique;not null" json:"phone_number"`
 	Username     string    `json:"username"`
 	BankCard     string    `json:"bank_card"`
-	Email        string    `gorm:"unique" json:"email"`
+	Email        *string   `gorm:"unique" json:"email"`
 	PasswordHash string    `json:"password_hash"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`

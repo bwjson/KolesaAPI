@@ -80,6 +80,7 @@ func (h *Handler) VerifyCode(c *gin.Context) {
 
 	newUser := models.User{
 		PhoneNumber: request.PhoneNumber,
+		Email:       nil,
 	}
 
 	// check existing user
