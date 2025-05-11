@@ -188,7 +188,36 @@ func (h *Handler) GetCarById(c *gin.Context) {
 		return
 	}
 
-	response.NewSuccessResponse(c, http.StatusOK, car)
+	responseCar := dto.CarResponseDTO{
+		ID: car.ID,
+		User: &dto.SafeUserDTO{
+			PhoneNumber: car.User.PhoneNumber,
+			Username:    car.User.Username,
+			Email:       car.User.Email,
+			CreatedAt:   car.User.CreatedAt,
+			UpdatedAt:   car.User.UpdatedAt,
+		},
+		Category:         car.Category,
+		Brand:            car.Brand,
+		Model:            car.Model,
+		Generation:       car.Generation,
+		City:             car.City,
+		Color:            car.Color,
+		Body:             car.Body,
+		Price:            car.Price,
+		EngineVolume:     car.EngineVolume,
+		Mileage:          car.Mileage,
+		CustomsClearance: car.CustomsClearance,
+		Description:      car.Description,
+		SteeringWheel:    car.SteeringWheel,
+		WheelDrive:       car.WheelDrive,
+		Year:             car.Year,
+		AvatarSource:     car.AvatarSource,
+		CreatedAt:        car.CreatedAt,
+		UpdatedAt:        car.UpdatedAt,
+	}
+
+	response.NewSuccessResponse(c, http.StatusOK, responseCar)
 }
 
 // @Summary      Search cars
